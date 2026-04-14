@@ -670,7 +670,7 @@
     </div>
     <div class="fin-nohint hidden" id="finNoHint">⭐ <span id="noHintNum">0</span> cuvinte fără indicii</div>
     <div class="fin-msg" id="finMsg"></div>
-    <button class="btn btn-primary hidden" id="sessionContinueBtn" style="font-size:1.1rem;padding:18px;" onclick="continueSession()">▶&nbsp; Continuă sesiunea →</button>
+    <button class="btn hidden" id="sessionContinueBtn" style="font-size:1.1rem;padding:18px;background:#52C41A;color:#fff;border:none;border-radius:16px;font-weight:700;" onclick="continueSession()">▶&nbsp; Continuă sesiunea →</button>
     <button class="btn btn-primary" style="font-size:1.1rem;padding:18px;" onclick="restartSame()">🔄&nbsp; Încearcă din nou</button>
     <button class="btn btn-outline" style="font-size:1.1rem;padding:18px;" onclick="goHome()">🏠&nbsp; Înapoi la meniu</button>
 </div>
@@ -808,7 +808,10 @@
         <!-- Fraza completă revelată (apare după buton) -->
         <div class="fraze-reveal hidden" id="frazeReveal"></div>
 
-        <button class="btn btn-sound" id="frazeSoundBtn">🔊&nbsp; Ascultă fraza</button>
+        <div style="display:flex; gap:10px; width:100%;">
+            <button class="btn btn-sound" id="frazeSoundBtn" style="flex:1;">🔊&nbsp; Normal</button>
+            <button class="btn btn-sound" id="frazeSlowBtn" style="flex:1;">🐢&nbsp; Lent</button>
+        </div>
         <div id="frazeRepetaLabel" class="fraze-instruct hidden" style="text-align:center;">Repetă!</div>
         <button class="btn btn-self-success" id="frazeSuccessBtn">✅&nbsp; Am repetat</button>
         <button class="btn btn-success hidden" id="frazeNextBtn">✓&nbsp; Următor →</button>
@@ -1193,7 +1196,7 @@ const VOC_SFA = {
 // ─── DIVERSE ───
 "câine":       {size:false, loc:{cor:"Acasă sau în parc",       alt:["La magazin","La birou","În bucătărie"]},       fun:{cor:"Animal de companie",        alt:["Să mănânci","Să scrii","Să te speli"]}},
 "mașina":      {size:true,  loc:{cor:"În garaj/pe stradă",      alt:["În bucătărie","În baie","În dulap"]},          fun:{cor:"Să te deplasezi",           alt:["Să gătești","Să dormi","Să scrii"]}},
-"magazin":     {size:true,  loc:{cor:"Pe stradă/în oraș",       alt:["Acasă","La doctor","La școală"]},              fun:{cor:"Să cumperi lucruri",        alt:["Să dormi","Să gătești","Să scrii"]}},
+"magazin":     {size:true,  loc:{cor:"Într-un cartier sau mall",  alt:["Acasă","La spital","La școală"]},              fun:{cor:"Să cumperi lucruri",        alt:["Să dormi","Să te tratezi","Să înveți"]}},
 "flori":       {size:false, loc:{cor:"În grădină/florărie",     alt:["În bucătărie","La farmacie","Pe stradă"]},     fun:{cor:"Să bucuri pe cineva",       alt:["Să mănânci","Să scrii","Să dormi"]}},
 "salut":       {size:false, loc:{cor:"Oriunde",                 alt:["Numai acasă","Numai la doctor","Numai în parc"]},fun:{cor:"Să saluti pe cineva",      alt:["Să mănânci","Să scrii","Să dormi"]}},
 // ─── BAIE ───
@@ -1770,7 +1773,7 @@ let descSelfSuccess = false;
 
 // Definițiile celor 2 întrebări SFA (folosesc datele din VOC_SFA)
 const DESC_SFA_DEFS = [
-    { q: "Unde îl/o găsești?",  build: (sfa) => buildDescOpts(sfa.loc) },
+    { q: "Unde se găsește?",    build: (sfa) => buildDescOpts(sfa.loc) },
     { q: "La ce se folosește?", build: (sfa) => buildDescOpts(sfa.fun) },
 ];
 
@@ -2170,7 +2173,7 @@ function frazeDoReveal() {
 
     document.getElementById("frazeNextBtn").classList.remove("hidden");
     saveFrazeProgress(frazeScenariuId, frazeIdx, frazeNivel);
-    say(fraza.text, 0.65);
+    say(fraza.text, 0.82);
 }
 
 function frazeNext() {
@@ -2198,14 +2201,20 @@ function showCompletionFraze() {
     show("completionScreen");
 }
 
-// Wire fraze buttons — frazeSoundBtn și frazeSuccessBtn → NUMAI click (TTS pe iOS)
-document.getElementById("frazeSoundBtn").addEventListener("click", () => {
-    say(frazeQueue[frazeIdx].text, 0.65);
-    // Nivel 1: dezvăluie "Repetă!" și "Am repetat" după ce utilizatorul a ascultat fraza
+// Wire fraze buttons — frazeSoundBtn și frazeSlowBtn → NUMAI click (TTS pe iOS)
+function frazeUnlockRepeta() {
     if (frazeNivel === 1) {
         document.getElementById("frazeRepetaLabel").classList.remove("hidden");
         document.getElementById("frazeSuccessBtn").classList.remove("hidden");
     }
+}
+document.getElementById("frazeSoundBtn").addEventListener("click", () => {
+    say(frazeQueue[frazeIdx].text, 0.82);
+    frazeUnlockRepeta();
+});
+document.getElementById("frazeSlowBtn").addEventListener("click", () => {
+    sayWordByWord(frazeQueue[frazeIdx].text, 200);
+    frazeUnlockRepeta();
 });
 document.getElementById("frazeSuccessBtn").addEventListener("click", () => frazeDoReveal());
 document.getElementById("frazeNextBtn").addEventListener("touchstart", e => { e.preventDefault(); frazeNext(); }, { passive:false });
@@ -2432,6 +2441,22 @@ function say(text, rate=0.85) {
     const u = new SpeechSynthesisUtterance(text);
     u.lang = "ro-RO"; u.rate = rate; u.pitch = 1.05;
     window.speechSynthesis.speak(u);
+}
+
+// Rostire cuvânt cu cuvânt, cu pauze — pentru iOS care ignoră rate
+function sayWordByWord(text, pauseMs = 400) {
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const words = text.trim().split(/\s+/);
+    let idx = 0;
+    function next() {
+        if (idx >= words.length) return;
+        const u = new SpeechSynthesisUtterance(words[idx]);
+        u.lang = "ro-RO"; u.rate = 0.85; u.pitch = 1.05;
+        u.onend = () => { idx++; setTimeout(next, pauseMs); };
+        window.speechSynthesis.speak(u);
+    }
+    next();
 }
 
 // ═══════════════════════════════════════════

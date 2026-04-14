@@ -43,7 +43,7 @@
         .mode-list { display: flex; flex-direction: column; gap: 10px; width: 100%; }
         .mode-btn {
             width: 100%; padding: 16px 18px;
-            background: var(--card); border: 3px solid transparent;
+            background: var(--card); border: 2px solid transparent;
             border-radius: 16px; text-align: left;
             font-size: 1rem; font-weight: 600; cursor: pointer;
             display: flex; align-items: center; gap: 14px;
@@ -52,8 +52,9 @@
             transition: border-color 0.15s, background 0.15s;
         }
         .mode-btn .mode-icon { font-size: 1.6rem; flex-shrink: 0; }
+        .mode-btn .mode-info { flex: 1; min-width: 0; }
         .mode-btn .mode-desc { font-size: 0.82rem; font-weight: 400; color: var(--muted); }
-        .mode-btn.selected   { border-color: var(--primary); background: #F0F7FF; }
+        .mode-btn .mode-arrow { font-size: 1.1rem; color: var(--primary); opacity: 0.6; flex-shrink: 0; }
         .mode-btn:active     { filter: brightness(0.95); }
 
         /* Category grid */
@@ -520,75 +521,90 @@
     <div class="home-title">AfazieApp</div>
     <div class="home-sub">Exerciții de limbaj pentru recuperare după AVC.</div>
 
-    <button class="btn btn-generate" onclick="generateAndShowSession()">🎯&nbsp; Începe exerciții</button>
+    <button class="btn btn-generate" onclick="generateAndShowSession()" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <span style="font-size:1.2rem;font-weight:800;">Hai să exersăm!</span>
+        <span style="font-size:0.82rem;font-weight:500;opacity:0.85;">3 exerciții alese aleator · ~10 minute</span>
+    </button>
 
     <div class="section-label">Sau alege un exercițiu:</div>
     <div class="mode-list">
-        <button class="mode-btn selected" id="modeBtn-arrange" onclick="selectMode('arrange')">
+        <button class="mode-btn" id="modeBtn-arrange" onclick="handleModeBtn('arrange')">
             <span class="mode-icon">🔤</span>
-            <div>
+            <div class="mode-info">
                 <div>Aranjează cuvântul</div>
                 <div class="mode-desc">Pune literele amestecate în ordinea corectă</div>
             </div>
+            <span class="mode-arrow">▶</span>
         </button>
-        <button class="mode-btn" id="modeBtn-recognize" onclick="selectMode('recognize')">
+        <button class="mode-btn" id="modeBtn-recognize" onclick="handleModeBtn('recognize')">
             <span class="mode-icon">👁️</span>
-            <div>
+            <div class="mode-info">
                 <div>Recunoaște litera</div>
                 <div class="mode-desc">Vezi o literă și alege-o din 4 opțiuni</div>
             </div>
+            <span class="mode-arrow">▶</span>
         </button>
-        <button class="mode-btn" id="modeBtn-sound" onclick="selectMode('sound')">
+        <button class="mode-btn" id="modeBtn-sound" onclick="handleModeBtn('sound')">
             <span class="mode-icon">🔊</span>
-            <div>
+            <div class="mode-info">
                 <div>Găsește litera din sunet</div>
                 <div class="mode-desc">Auzi o literă și o găsești printre 4 opțiuni</div>
             </div>
+            <span class="mode-arrow">▶</span>
         </button>
-        <button class="mode-btn" id="modeBtn-evocare" onclick="selectMode('evocare')">
+        <button class="mode-btn" id="modeBtn-evocare" onclick="handleModeBtn('evocare')">
             <span class="mode-icon">🗣️</span>
-            <div>
+            <div class="mode-info">
                 <div>Spune cuvântul</div>
                 <div class="mode-desc">Vezi o imagine și încearcă să numești ce e — cu indicii dacă ai nevoie</div>
             </div>
+            <span class="mode-arrow">▶</span>
         </button>
-        <button class="mode-btn" id="modeBtn-numere" onclick="selectMode('numere')">
+        <button class="mode-btn" id="modeBtn-numere" onclick="handleModeBtn('numere')">
             <span class="mode-icon">🔢</span>
-            <div>
+            <div class="mode-info">
                 <div>Exerciții cu numere</div>
                 <div class="mode-desc">Adunare și scădere cu ajutor vizual</div>
             </div>
+            <span class="mode-arrow">▶</span>
         </button>
-        <button class="mode-btn" id="modeBtn-descriere" onclick="selectMode('descriere')">
+        <button class="mode-btn" id="modeBtn-descriere" onclick="handleModeBtn('descriere')">
             <span class="mode-icon">🔍</span>
-            <div>
+            <div class="mode-info">
                 <div>Descrie imaginea</div>
                 <div class="mode-desc">Răspunde la întrebări despre imagine — activează semantica</div>
             </div>
+            <span class="mode-arrow">▶</span>
         </button>
-        <button class="mode-btn" id="modeBtn-fraze" onclick="selectMode('fraze')">
+        <button class="mode-btn" id="modeBtn-fraze" onclick="handleModeBtn('fraze')">
             <span class="mode-icon">💬</span>
-            <div>
+            <div class="mode-info">
                 <div>Fraze pentru viața reală</div>
                 <div class="mode-desc">Exersează fraze practice din scenarii reale de zi cu zi</div>
             </div>
+            <span class="mode-arrow">▶</span>
         </button>
     </div>
+</div>
 
-    <!-- Category grid — only for arrange mode -->
-    <div id="catSection" style="width:100%; display:flex; flex-direction:column; gap:12px;">
+<!-- ════════════════════ CAT PICK SCREEN ════════════════════ -->
+<div id="catPickScreen" class="screen hidden">
+    <div class="ex-header">
+        <button class="back-btn" onclick="goHome()">← Înapoi</button>
+        <div id="catPickTitle" style="font-size:1rem;font-weight:700;color:var(--primary);"></div>
+    </div>
+
+    <div id="catPickArrange" class="hidden" style="width:100%;display:flex;flex-direction:column;gap:10px;">
         <div class="section-label">Categorie de cuvinte</div>
         <div class="cat-grid" id="catGrid"></div>
     </div>
 
-    <!-- Category grid — only for evocare mode -->
-    <div id="evocCatSection" style="width:100%; flex-direction:column; gap:12px; display:none;">
+    <div id="catPickEvoc" class="hidden" style="width:100%;display:flex;flex-direction:column;gap:10px;">
         <div class="section-label">Categorie de cuvinte</div>
         <div class="cat-grid" id="evocCatGrid"></div>
     </div>
 
-    <!-- Fraze scenario + nivel — only for fraze mode -->
-    <div id="frazeCatSection" style="width:100%; flex-direction:column; gap:12px; display:none;">
+    <div id="catPickFraze" class="hidden" style="width:100%;display:flex;flex-direction:column;gap:10px;">
         <div class="section-label">Scenariu</div>
         <div class="cat-grid" id="frazeCatGrid"></div>
         <div class="section-label" style="margin-top:4px;">Nivel de dificultate</div>
@@ -599,8 +615,8 @@
         </div>
     </div>
 
-    <button class="btn btn-primary" style="font-size:1.2rem;padding:20px;" onclick="startExercise()">
-        ▶&nbsp; Începe exercițiul
+    <button class="btn btn-primary" style="font-size:1.2rem;padding:20px;margin-top:8px;" onclick="startExercise()">
+        ▶&nbsp; Începe
     </button>
 </div>
 
@@ -821,17 +837,17 @@
 <!-- ════════════════════ SESSION SCREEN ════════════════════ -->
 <div id="sessionScreen" class="screen hidden">
     <div style="font-size:56px;margin-top:8px;">🎯</div>
-    <div class="home-title" style="font-size:1.55rem;">Sesiunea ta</div>
-    <div class="home-sub">3 exerciții · ~10 minute<br>Apasă pe un exercițiu ca să începi!</div>
+    <div class="home-title" style="font-size:1.55rem;">Exercițiile tale</div>
+    <div class="home-sub">Apasă pe un exercițiu ca să începi!</div>
 
     <div id="sessionExList" style="width:100%;display:flex;flex-direction:column;gap:12px;"></div>
 
     <div class="session-done-banner hidden" id="sessionDoneBanner">
-        🏆 Sesiune completă! Bravo, ai lucrat excelent!
+        🏆 Bravo! Ai terminat toate exercițiile!
     </div>
 
     <button class="btn btn-generate" onclick="generateAndShowSession()" style="font-size:0.95rem;padding:15px;">
-        🔄&nbsp; Generează o sesiune nouă
+        🔄&nbsp; Generează alte exerciții
     </button>
     <button class="btn btn-outline" style="font-size:1rem;padding:16px;" onclick="exitSession()">🏠&nbsp; Înapoi la meniu</button>
 </div>
@@ -920,7 +936,7 @@ const VOC_EVOCARE = {
         {w:"chei",        img:"chei.png",        h1:"C", h2:"CHEI", sfa:[{q:"La ce folosești?",            opts:["Deschizi ușa","Mănânci","Te speli"]},  {q:"Din ce sunt făcute?",      opts:["Metal","Plastic moale","Lemn"]}]},
         {w:"masă",        img:"masa.png",        h1:"M", h2:"MA",   sfa:[{q:"La ce folosești?",            opts:["Pui lucruri/mănânci","Să dormi","Să te speli"]},{q:"Cum arată?",       opts:["Are picioare și blat","Are roți","Are ecran"]}]},
         {w:"perne",       img:"perne.png",       h1:"P", h2:"PER",  sfa:[{q:"La ce folosești?",            opts:["Să dormi odihnit","Să gătești","Să conduci"]},{q:"Cum sunt?",          opts:["Moi și pufoase","Grele și dure","Fierbinți"]}]},
-        {w:"bec",         img:"bes.png",         h1:"B", h2:"BEC",  sfa:[{q:"La ce folosești?",            opts:["Să dai lumină","Să gătești","Să bei apă"]},{q:"Funcționează cu?",      opts:["Electricitate","Apă","Benzină"]}]},
+        {w:"bec",         img:"bec.png",         h1:"B", h2:"BEC",  sfa:[{q:"La ce folosești?",            opts:["Să dai lumină","Să gătești","Să bei apă"]},{q:"Funcționează cu?",      opts:["Electricitate","Apă","Benzină"]}]},
         {w:"medicamente", img:"medicamente.png", h1:"M", h2:"ME",   sfa:[{q:"La ce folosești?",            opts:["Să te tratezi","Să gătești","Să te îmbraci"]},{q:"Cine ți le dă?",    opts:["Medicul","Bucătarul","Profesorul"]}]},
         {w:"baston",      img:"baston.png",      h1:"B", h2:"BAS",  sfa:[{q:"La ce folosești?",            opts:["Te sprijini la mers","Scrii","Gătești"]},{q:"Cine îl folosește?",      opts:["Cineva cu dificultăți de mers","Toți copiii","Bucătarii"]}]},
         {w:"injecție",    img:"injectie.png",    h1:"I", h2:"IN",   sfa:[{q:"Cine o face?",                opts:["Medicul/asistenta","Bucătarul","Profesorul"]},{q:"La ce folosește?",   opts:["Dai/primești medicament","Mănânci","Scrii"]}]},
@@ -1292,11 +1308,35 @@ function isDarkColor(hex) {
 
 function selectMode(m) {
     mode = m;
-    document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("selected"));
-    document.getElementById("modeBtn-" + m).classList.add("selected");
-    document.getElementById("catSection").style.display      = m === "arrange"                       ? "flex" : "none";
-    document.getElementById("evocCatSection").style.display  = (m === "evocare" || m === "descriere") ? "flex" : "none";
-    document.getElementById("frazeCatSection").style.display = m === "fraze"                         ? "flex" : "none";
+}
+
+function handleModeBtn(m) {
+    mode = m;
+    const needsCat = ["arrange", "evocare", "descriere", "fraze"].includes(m);
+    if (needsCat) {
+        showCatPickScreen(m);
+    } else {
+        startExercise();
+    }
+}
+
+function showCatPickScreen(m) {
+    const titles = {
+        arrange:  "Aranjează cuvântul — alege categoria",
+        evocare:  "Spune cuvântul — alege categoria",
+        descriere:"Descrie imaginea — alege categoria",
+        fraze:    "Fraze pentru viața reală — alege scenariul"
+    };
+    document.getElementById("catPickTitle").textContent = titles[m] || "";
+    document.getElementById("catPickArrange").classList.toggle("hidden", m !== "arrange");
+    document.getElementById("catPickEvoc").classList.toggle("hidden",    m !== "evocare" && m !== "descriere");
+    document.getElementById("catPickFraze").classList.toggle("hidden",   m !== "fraze");
+
+    if (m === "arrange")                        renderCats();
+    else if (m === "evocare" || m === "descriere") renderEvocCats();
+    else if (m === "fraze")                     renderFrazeCats();
+
+    show("catPickScreen");
 }
 
 function renderCats() {
@@ -2412,7 +2452,7 @@ function showCompletionEvocare(practiced, total) {
 // UTILS
 // ═══════════════════════════════════════════
 function show(id) {
-    ["homeScreen","arrangeScreen","letterScreen","evocareScreen","descriereScreen","numereScreen","completionScreen","recordScreen","frazeScreen","sessionScreen"].forEach(s =>
+    ["homeScreen","catPickScreen","arrangeScreen","letterScreen","evocareScreen","descriereScreen","numereScreen","completionScreen","recordScreen","frazeScreen","sessionScreen"].forEach(s =>
         document.getElementById(s).classList.toggle("hidden", s !== id)
     );
 }

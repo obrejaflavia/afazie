@@ -37,6 +37,7 @@
         .home-sub   { font-size: 1rem; color: var(--muted); text-align: center; line-height: 1.55; }
 
         .section-label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); width: 100%; }
+        .task-label { font-size: 1.4rem; font-weight: 800; color: var(--primary); text-align: center; width: 100%; line-height: 1.3; }
 
         /* Mode buttons */
         .mode-list { display: flex; flex-direction: column; gap: 10px; width: 100%; }
@@ -188,7 +189,7 @@
         /* Big letter display (mode 2) */
         .big-letter {
             font-size: 160px; font-weight: 900; line-height: 1;
-            color: var(--text); letter-spacing: -2px;
+            color: var(--text); letter-spacing: -2px; text-align: center; width: 100%;
             font-family: 'Helvetica Neue', Arial, sans-serif;
         }
 
@@ -493,7 +494,13 @@
         .desc-sfa-btn.sfa-wrong   { background: #FFF1F0; border-color: #FF4D4F; color: #CF1322; animation: optShake 0.4s; }
         .desc-sfa-btn:disabled    { cursor: default; }
 
-        /* Faza 2 — Recapitulare */
+        /* Faza 2 — Context SFA (răspunsurile vizibile în timpul denumirii) */
+        .desc-context {
+            font-size: 0.9rem; color: var(--muted); text-align: center;
+            background: #F7F9FF; border: 1px solid #D6E4F5;
+            border-radius: 10px; padding: 8px 14px; width: 100%; line-height: 1.7;
+        }
+        /* Faza 2 — Recapitulare (nefolosită, păstrată pentru compatibilitate) */
         .desc-recap-card {
             width: 100%; background: #F7F9FF; border: 2px solid #C8D9EF;
             border-radius: 16px; padding: 16px 18px;
@@ -606,6 +613,7 @@
     <div class="prog-bar"><div class="prog-fill" id="arrProgFill" style="width:0%"></div></div>
 
     <div class="card">
+        <div class="task-label">Pune literele în ordine</div>
         <div class="emoji-big" id="wordEmoji">🍎</div>
         <div class="answer-row" id="answerRow"></div>
 
@@ -635,12 +643,13 @@
         <!-- Mode 2: big letter -->
         <div id="letDisplayArea">
             <div class="big-letter" id="bigLetter">A</div>
+            <div class="task-label" style="margin-top:6px;">Care este această literă?</div>
         </div>
 
         <!-- Mode 3: listen button -->
         <div id="letSoundArea" class="sound-area hidden">
             <button class="listen-btn" id="listenBtn">🔊</button>
-            <div class="listen-label">Ascultă și găsește litera</div>
+            <div class="task-label" style="margin-top:6px;">Ascultă și găsește litera</div>
         </div>
 
         <!-- 2×2 options -->
@@ -675,7 +684,7 @@
     <div class="prog-bar"><div class="prog-fill" id="evocProgFill" style="width:0%"></div></div>
 
     <div class="card">
-        <div class="section-label" style="text-align:center;">Cum se numește?</div>
+        <div class="task-label">Cum se numește?</div>
         <img id="evocImg" class="evoc-img" src="" alt="">
         <div id="evocEmoji" class="evoc-emoji" style="display:none;"></div>
 
@@ -704,6 +713,9 @@
     <div class="prog-bar"><div class="prog-fill" id="descProgFill" style="width:0%"></div></div>
 
     <div class="card">
+        <!-- Titlu exercițiu — mereu vizibil -->
+        <div class="task-label">Ce este în imagine?</div>
+
         <!-- Imagine (mereu vizibilă) -->
         <img id="descImg" class="evoc-img" src="" alt="" style="display:none;">
         <div id="descEmoji" class="evoc-emoji" style="display:none;"></div>
@@ -712,28 +724,18 @@
         <div class="desc-phases">
             <div class="desc-phase-step active" id="descPS1">🔍 Analizăm</div>
             <div class="desc-phase-arrow">›</div>
-            <div class="desc-phase-step" id="descPS2">📋 Recapitulare</div>
-            <div class="desc-phase-arrow">›</div>
-            <div class="desc-phase-step" id="descPS3">🗣️ Ce este?</div>
+            <div class="desc-phase-step" id="descPS2">🗣️ Ce este?</div>
         </div>
 
-        <!-- FAZA 1: Cele 3 întrebări SFA (secvențiale) -->
+        <!-- FAZA 1: Cele 2 întrebări SFA (secvențiale) -->
         <div id="descPhase1">
             <div class="desc-sfa-q" id="descSfaQ"></div>
             <div id="descSfaOpts"></div>
         </div>
 
-        <!-- FAZA 2: Recapitulare + buton "Ce este?" -->
-        <div id="descPhase2" class="hidden">
-            <div class="desc-recap-card" id="descRecapCard"></div>
-            <button class="btn btn-primary" style="margin-top:4px;" onclick="startDescEvocare()">
-                🤔&nbsp; Ce este în imagine?
-            </button>
-        </div>
-
-        <!-- FAZA 3: Evocare (indicii progresive, ca la "Spune cuvântul") -->
-        <div id="descPhase3" class="hidden" style="width:100%;display:flex;flex-direction:column;align-items:center;gap:10px;">
-            <div class="section-label" style="text-align:center;">Ce este în imagine?</div>
+        <!-- FAZA 2: Denumire cu context + indicii -->
+        <div id="descPhase2" class="hidden" style="width:100%;display:flex;flex-direction:column;align-items:center;gap:10px;">
+            <div class="desc-context hidden" id="descContext"></div>
             <div class="evoc-hint" id="descHintDisplay"></div>
 
             <hr class="sfa-divider">
@@ -758,6 +760,7 @@
     <div class="prog-bar"><div class="prog-fill" id="numProgFill" style="width:0%"></div></div>
 
     <div class="card">
+        <div class="task-label" id="numTaskLabel">Câte sunt?</div>
         <div class="num-dots" id="numDots"></div>
         <div class="num-equation" id="numEquation"></div>
         <div class="options-grid" id="numOptionsGrid" style="margin-top:8px;"></div>
@@ -780,7 +783,6 @@
     <div class="card">
         <!-- Nivel 1: fraza completă vizibilă -->
         <div id="frazeL1Area" style="width:100%;display:flex;flex-direction:column;align-items:center;gap:14px;">
-            <div class="fraze-instruct">Ascultă și repetă fraza:</div>
             <div class="fraze-phrase-card">
                 <div class="fraze-text" id="frazeL1Text"></div>
             </div>
@@ -807,6 +809,7 @@
         <div class="fraze-reveal hidden" id="frazeReveal"></div>
 
         <button class="btn btn-sound" id="frazeSoundBtn">🔊&nbsp; Ascultă fraza</button>
+        <div id="frazeRepetaLabel" class="fraze-instruct hidden" style="text-align:center;">Repetă!</div>
         <button class="btn btn-self-success" id="frazeSuccessBtn">✅&nbsp; Am repetat</button>
         <button class="btn btn-success hidden" id="frazeNextBtn">✓&nbsp; Următor →</button>
     </div>
@@ -1765,9 +1768,8 @@ let descAnswers = [];     // răspunsurile colectate (pentru recap)
 let descHintLevel = 0;    // 0=niciunul, 1=literă, 2=silabă, 3=revelat
 let descSelfSuccess = false;
 
-// Definițiile celor 3 întrebări SFA (folosesc datele din VOC_SFA)
+// Definițiile celor 2 întrebări SFA (folosesc datele din VOC_SFA)
 const DESC_SFA_DEFS = [
-    { q: "E mare sau mic?",     build: (sfa) => buildSizeOpts(sfa) },
     { q: "Unde îl/o găsești?",  build: (sfa) => buildDescOpts(sfa.loc) },
     { q: "La ce se folosește?", build: (sfa) => buildDescOpts(sfa.fun) },
 ];
@@ -1806,13 +1808,12 @@ function loadDesc() {
     updateDescPhaseUI();
     document.getElementById("descPhase1").classList.remove("hidden");
     document.getElementById("descPhase2").classList.add("hidden");
-    document.getElementById("descPhase3").classList.add("hidden");
     document.getElementById("descNextBtn").classList.add("hidden");
     loadDescSfaQuestion();
 }
 
 function updateDescPhaseUI() {
-    [1, 2, 3].forEach(i => {
+    [1, 2].forEach(i => {
         const el = document.getElementById("descPS" + i);
         if (!el) return;
         el.className = "desc-phase-step";
@@ -1848,8 +1849,8 @@ function loadDescSfaQuestion() {
                 allBtns.forEach(b => { b.disabled = true; });
                 descAnswers[descSfaIdx] = opt.text;
                 setTimeout(() => {
-                    if (descSfaIdx < 2) { descSfaIdx++; loadDescSfaQuestion(); }
-                    else { showDescRecap(); }
+                    if (descSfaIdx < 1) { descSfaIdx++; loadDescSfaQuestion(); }
+                    else { startDescEvocare(); }
                 }, 700);
             } else {
                 btn.disabled = true;
@@ -1888,12 +1889,22 @@ function showDescRecap() {
 }
 
 function startDescEvocare() {
-    descPhase = 3;
+    descPhase = 2;
     updateDescPhaseUI();
     descHintLevel = 0; descSelfSuccess = false;
 
-    document.getElementById("descPhase2").classList.add("hidden");
-    document.getElementById("descPhase3").classList.remove("hidden");
+    document.getElementById("descPhase1").classList.add("hidden");
+    document.getElementById("descPhase2").classList.remove("hidden");
+
+    // Afișează răspunsurile SFA ca context
+    const icons = ["📍", "🔧"];
+    const contextEl = document.getElementById("descContext");
+    if (descAnswers.length > 0) {
+        contextEl.innerHTML = descAnswers.map((a, i) => `${icons[i]} <strong>${a}</strong>`).join("&nbsp;&nbsp;•&nbsp;&nbsp;");
+        contextEl.classList.remove("hidden");
+    } else {
+        contextEl.classList.add("hidden");
+    }
 
     const hintEl = document.getElementById("descHintDisplay");
     hintEl.textContent = ""; hintEl.className = "evoc-hint";
@@ -1984,6 +1995,7 @@ function loadNumere() {
     document.getElementById("numProgFill").style.width = `${(numIdx/numQueue.length)*100}%`;
     document.getElementById("numFeedback").classList.add("hidden");
     document.getElementById("numNextBtn").classList.add("hidden");
+    document.getElementById("numTaskLabel").textContent = q.op === "+" ? "Cât face?" : "Câte rămân?";
 
     // Dot visual: e.g. 🟡🟡🟡 + 🟡🟡 = ?
     const dot = "🟡";
@@ -2116,6 +2128,11 @@ function loadFraze() {
     successBtn.textContent = frazeNivel === 1 ? "✅\u00a0 Am repetat"
                            : frazeNivel === 2 ? "✅\u00a0 Am completat fraza"
                            :                    "✅\u00a0 Am spus fraza";
+    // Nivel 1: ascunde "Am repetat" și "Repetă!" până când utilizatorul apasă 🔊
+    if (frazeNivel === 1) {
+        successBtn.classList.add("hidden");
+        document.getElementById("frazeRepetaLabel").classList.add("hidden");
+    }
 
     document.getElementById("frazeSoundBtn").textContent =
         frazeNivel === 1 ? "🔊\u00a0 Ascultă fraza" : "🔊\u00a0 Indiciu – ascultă fraza";
@@ -2153,7 +2170,7 @@ function frazeDoReveal() {
 
     document.getElementById("frazeNextBtn").classList.remove("hidden");
     saveFrazeProgress(frazeScenariuId, frazeIdx, frazeNivel);
-    say(fraza.text, 0.82);
+    say(fraza.text, 0.65);
 }
 
 function frazeNext() {
@@ -2183,7 +2200,12 @@ function showCompletionFraze() {
 
 // Wire fraze buttons — frazeSoundBtn și frazeSuccessBtn → NUMAI click (TTS pe iOS)
 document.getElementById("frazeSoundBtn").addEventListener("click", () => {
-    say(frazeQueue[frazeIdx].text, 0.82);
+    say(frazeQueue[frazeIdx].text, 0.65);
+    // Nivel 1: dezvăluie "Repetă!" și "Am repetat" după ce utilizatorul a ascultat fraza
+    if (frazeNivel === 1) {
+        document.getElementById("frazeRepetaLabel").classList.remove("hidden");
+        document.getElementById("frazeSuccessBtn").classList.remove("hidden");
+    }
 });
 document.getElementById("frazeSuccessBtn").addEventListener("click", () => frazeDoReveal());
 document.getElementById("frazeNextBtn").addEventListener("touchstart", e => { e.preventDefault(); frazeNext(); }, { passive:false });

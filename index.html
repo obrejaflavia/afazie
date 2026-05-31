@@ -503,6 +503,31 @@
             background: #F7F9FF; border: 1px solid #D6E4F5;
             border-radius: 10px; padding: 8px 14px; width: 100%; line-height: 1.7;
         }
+        /* ────────────────────────────────
+           SILABE EXERCISE
+        ──────────────────────────────── */
+        .sil-display {
+            font-size: 5.5rem; font-weight: 900; color: var(--primary);
+            letter-spacing: 6px; text-align: center; width: 100%;
+            line-height: 1; margin: 8px 0 20px;
+        }
+        .sil-hint-card {
+            background: var(--card); border-radius: 14px; padding: 10px;
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+            border: 2px solid #E8EFF8; cursor: pointer;
+        }
+        .sil-hint-card img { width: 100%; height: 90px; object-fit: cover; border-radius: 8px; }
+        .sil-hint-card .sil-hint-word { font-size: 1rem; font-weight: 700; text-align: center; color: var(--text); }
+        .sil-record-row {
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--card); border-radius: 12px; padding: 12px 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); width: 100%;
+        }
+        .sil-record-label { font-size: 1.5rem; font-weight: 900; color: var(--primary); min-width: 70px; }
+        .sil-rec-btn { background: #FFF0F0; border: 2px solid #FFCDD2 !important; color: #C62828; padding: 8px 16px; font-size: 1.1rem; }
+        .sil-play-btn { background: #EEF0FF; border: 2px solid #C7CEFF !important; color: #4B5EE0; padding: 8px 14px; font-size: 1rem; }
+        .sil-done-mark { color: var(--success); font-size: 1.3rem; }
+
         /* Faza 2 — Recapitulare (nefolosită, păstrată pentru compatibilitate) */
         .desc-recap-card {
             width: 100%; background: #F7F9FF; border: 2px solid #C8D9EF;
@@ -588,7 +613,16 @@
             </div>
             <span class="mode-arrow">▶</span>
         </button>
+        <button class="mode-btn" id="modeBtn-silabe" onclick="handleModeBtn('silabe')">
+            <span class="mode-icon">🔡</span>
+            <div class="mode-info">
+                <div>Silabe</div>
+                <div class="mode-desc">Citește silaba și spune un cuvânt care începe cu ea</div>
+            </div>
+            <span class="mode-arrow">▶</span>
+        </button>
     </div>
+
 </div>
 
 <!-- ════════════════════ CAT PICK SCREEN ════════════════════ -->
@@ -854,6 +888,53 @@
         🔄&nbsp; Generează alte exerciții
     </button>
     <button class="btn btn-outline" style="font-size:1rem;padding:16px;" onclick="exitSession()">🏠&nbsp; Înapoi la meniu</button>
+</div>
+
+<!-- ════════════════════ SILABE EXERCISE ════════════════════ -->
+<div id="silabeScreen" class="screen hidden">
+    <div class="ex-header">
+        <button class="back-btn" onclick="goHome()">← Înapoi</button>
+        <div class="prog-lbl" id="silProgLbl">1 / 5</div>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="silProgFill" style="width:0%"></div></div>
+
+    <div class="card" style="gap:14px;">
+        <div class="task-label" id="silTaskLabel">Citește această silabă</div>
+        <div class="sil-display" id="silDisplay">BA_</div>
+
+        <!-- Faza 1: Citește silaba -->
+        <div id="silPhase1" style="width:100%;display:flex;flex-direction:column;gap:10px;">
+            <button class="btn btn-sound" onclick="playSilaba()">🔊&nbsp; Ascultă silaba</button>
+            <button class="btn btn-primary" style="font-size:1.1rem;padding:18px;" onclick="silabaToPhase(2)">✓&nbsp; Am citit-o</button>
+        </div>
+
+        <!-- Faza 2: Spune un cuvânt -->
+        <div id="silPhase2" class="hidden" style="width:100%;display:flex;flex-direction:column;gap:10px;">
+            <button class="btn btn-success" style="font-size:1.1rem;padding:18px;" onclick="nextSilaba()">✓&nbsp; Am spus un cuvânt!</button>
+            <button class="btn btn-hint" onclick="silabaToPhase(3)">💡&nbsp; Nu știu — ajutor</button>
+        </div>
+
+        <!-- Faza 3: Indicii progresive -->
+        <div id="silPhase3" class="hidden" style="width:100%;display:flex;flex-direction:column;gap:10px;">
+            <div id="silHintNote" style="font-size:0.88rem;color:var(--muted);text-align:center;font-style:italic;"></div>
+            <div id="silHintsList" style="display:flex;flex-direction:column;gap:8px;width:100%;"></div>
+            <button class="btn btn-hint" id="silNextHintBtn" onclick="revealNextSilabaHint()">💡&nbsp; Indiciu</button>
+            <button class="btn btn-outline hidden" id="silChangeWordBtn" onclick="nextSilabaCandidate()">→&nbsp; Alt cuvânt</button>
+            <button class="btn btn-success" style="font-size:1.1rem;padding:18px;" onclick="nextSilaba()">✓&nbsp; Am spus cuvântul!</button>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════ SILABE RECORD ════════════════════ -->
+<div id="silabeRecordScreen" class="screen hidden">
+    <div class="ex-header">
+        <button class="back-btn" onclick="goHome()">← Înapoi</button>
+        <div style="font-size:0.95rem;font-weight:700;color:var(--primary);">🎤 Înregistrează silabe</div>
+    </div>
+    <div style="font-size:0.85rem;color:var(--muted);text-align:center;width:100%;">
+        Apasă 🔴 lângă o silabă, pronunță clar, apoi ⏹ pentru a opri.<br>Punctul verde apare când e salvată.
+    </div>
+    <div id="silRecordList" style="width:100%;display:flex;flex-direction:column;gap:8px;"></div>
 </div>
 
 <!-- ════════════════════ RECORD LETTERS ════════════════════ -->
@@ -1324,6 +1405,11 @@ function handleModeBtn(m) {
     }
 }
 
+function showSilabeRecord() {
+    show("silabeRecordScreen");
+    renderSilabeRecordList();
+}
+
 function showCatPickScreen(m) {
     const titles = {
         arrange:  "Aranjează cuvântul — alege categoria",
@@ -1379,6 +1465,9 @@ function startExercise() {
     } else if (mode === "fraze") {
         if (!sessionActive) frazeNivel = selectedFrazeNivel;
         startFraze();
+        return;
+    } else if (mode === "silabe") {
+        startSilabe();
         return;
     } else if (mode === "numere") {
         numQueue = generateNumereQueue(5);
@@ -2456,7 +2545,7 @@ function showCompletionEvocare(practiced, total) {
 // UTILS
 // ═══════════════════════════════════════════
 function show(id) {
-    ["homeScreen","catPickScreen","arrangeScreen","letterScreen","evocareScreen","descriereScreen","numereScreen","completionScreen","recordScreen","frazeScreen","sessionScreen"].forEach(s =>
+    ["homeScreen","catPickScreen","arrangeScreen","letterScreen","evocareScreen","descriereScreen","numereScreen","completionScreen","recordScreen","frazeScreen","sessionScreen","silabeScreen","silabeRecordScreen"].forEach(s =>
         document.getElementById(s).classList.toggle("hidden", s !== id)
     );
 }
@@ -2660,6 +2749,415 @@ function downloadSounds() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+}
+
+// ═══════════════════════════════════════════
+// SILABE EXERCISE
+// ═══════════════════════════════════════════
+
+const SILABE_LIST = [
+    "BA","CA","DA","FA","GA","HA","JA","LA","MA",
+    "NA","PA","RA","SA","ȘA","TA","ȚA","VA","ZA",
+    "BE","CE","DE","FE","GE","HE","JE","LE","ME",
+    "NE","PE","RE","SE","ȘE","TE","ȚE","VE","ZE",
+    "BI","CI","DI","FI","GI","HI","JI","LI","MI",
+    "NI","PI","RI","SI","ȘI","TI","ȚI","VI","ZI",
+    "BO","CO","DO","FO","GO","HO","JO","LO","MO",
+    "NO","PO","RO","SO","ȘO","TO","ȚO","VO","ZO",
+    "BU","CU","DU","FU","HU","JU","LU","MU",
+    "NU","PU","RU","SU","ȘU","TU",
+    "BĂ","CĂ","FĂ","HĂ","MĂ","PĂ","RĂ","SĂ","VĂ",
+    "CÂ","FÂ","GÂ","HÂ","RÂ"
+];
+
+// Dicționar dedicat exercițiului de silabe: silabă → cuvinte cu indicii
+const SILABE_WORDS = {
+    "BA":[{w:"banană",    hints:[{l:"Ce este?",t:"Un fruct galben și lung"},{l:"Unde?",t:"La piață sau magazin"}]},
+          {w:"baie",      hints:[{l:"Ce este?",t:"O cameră din casă"},{l:"La ce?",t:"Să te speli și faci duș"}]}],
+    "CA":[{w:"casă",      hints:[{l:"Ce este?",t:"Clădire unde locuiești"},{l:"Ce are?",t:"Camere, bucătărie, baie"}]},
+          {w:"carte",     hints:[{l:"Ce este?",t:"Are pagini cu litere"},{l:"La ce?",t:"Să citești și să înveți"}]}],
+    "DA":[{w:"dar",       hints:[{l:"Ce este?",t:"Ceva primit cu bucurie"},{l:"Când?",t:"La aniversare sau Crăciun"}]}],
+    "FA":[{w:"farfurie",  hints:[{l:"Ce este?",t:"Obiect rotund din porțelan"},{l:"La ce?",t:"Pui mâncare pe ea"}]},
+          {w:"familie",   hints:[{l:"Ce este?",t:"Persoane iubite"},{l:"Cine?",t:"Mamă, tată, copii"}]}],
+    "GA":[{w:"gară",      hints:[{l:"Ce este?",t:"Loc unde opresc trenurile"},{l:"La ce?",t:"Să călătorești cu trenul"}]},
+          {w:"garaj",     hints:[{l:"Ce este?",t:"Spațiu acoperit"},{l:"La ce?",t:"Să parchezi mașina"}]}],
+    "HA":[{w:"haină",     hints:[{l:"Ce este?",t:"Îmbrăcăminte groasă"},{l:"Când?",t:"O porți iarna, afară"}]}],
+    "JA":[{w:"jachetă",   hints:[{l:"Ce este?",t:"Un hanorac sau geacă"},{l:"Când?",t:"Primăvara sau toamna"}]}],
+    "LA":[{w:"lapte",     hints:[{l:"Ce este?",t:"Lichid alb"},{l:"De la cine?",t:"De la vacă sau din magazin"}]},
+          {w:"lampă",     hints:[{l:"Ce este?",t:"Obiect care dă lumină"},{l:"Unde?",t:"Pe masă sau în cameră"}]}],
+    "MA":[{w:"masă",      hints:[{l:"Ce este?",t:"Mobilă cu blat și picioare"},{l:"La ce?",t:"Să mănânci sau să lucrezi"}]},
+          {w:"mașină",    hints:[{l:"Ce este?",t:"Vehicul cu motor"},{l:"La ce?",t:"Să te deplasezi"}]}],
+    "NA":[{w:"nas",       hints:[{l:"Ce este?",t:"Parte a feței"},{l:"La ce?",t:"Să miroși și să respiri"}]}],
+    "PA":[{w:"pahar",     hints:[{l:"Ce este?",t:"Obiect de sticlă"},{l:"La ce?",t:"Să bei apă sau suc"}]},
+          {w:"pat",       hints:[{l:"Ce este?",t:"Mobilă pentru dormit"},{l:"Unde?",t:"În dormitor"}]}],
+    "RA":[{w:"radio",     hints:[{l:"Ce este?",t:"Aparat care transmite sunete"},{l:"La ce?",t:"Să asculți muzică sau știri"}]},
+          {w:"rață",      hints:[{l:"Ce este?",t:"Pasăre care înoată"},{l:"Unde?",t:"La baltă sau iaz"}]}],
+    "SA":[{w:"sare",      hints:[{l:"Ce este?",t:"Condiment alb"},{l:"La ce?",t:"Să dai gust mâncării"}]},
+          {w:"sac",       hints:[{l:"Ce este?",t:"Pungă mare"},{l:"La ce?",t:"Să pui și să cari lucruri"}]}],
+    "ȘA":[{w:"șapcă",     hints:[{l:"Ce este?",t:"Acoperă capul"},{l:"Când?",t:"Vara sau la sport"}]},
+          {w:"șarpe",     hints:[{l:"Ce este?",t:"Animal lung fără picioare"},{l:"Unde?",t:"La câmp sau în pădure"}]}],
+    "TA":[{w:"tată",      hints:[{l:"Cine este?",t:"Părintele tău bărbat"},{l:"Ce face?",t:"Are grijă de familie"}]},
+          {w:"tablou",    hints:[{l:"Ce este?",t:"Imagine pe perete"},{l:"Unde?",t:"Atârnat în cameră"}]}],
+    "ȚA":[{w:"țară",      hints:[{l:"Ce este?",t:"Loc cu granițe și popor"},{l:"Exemplu?",t:"România, Franța, Italia"}]}],
+    "VA":[{w:"vacanță",   hints:[{l:"Ce este?",t:"Timp liber fără muncă"},{l:"Când?",t:"Vara sau în concediu"}]},
+          {w:"vază",      hints:[{l:"Ce este?",t:"Obiect decorativ"},{l:"La ce?",t:"Pui flori în ea"}]}],
+    "ZA":[{w:"zahăr",     hints:[{l:"Ce este?",t:"Substanță dulce albă"},{l:"La ce?",t:"Pui în ceai sau prăjituri"}]}],
+    "BE":[{w:"bec",       hints:[{l:"Ce este?",t:"Obiect de sticlă rotund"},{l:"La ce?",t:"Să dai lumină în cameră"}]}],
+    "CE":[{w:"ceai",      hints:[{l:"Ce este?",t:"Băutură caldă"},{l:"Cum?",t:"Din plante și apă fierbinte"}]},
+          {w:"cer",       hints:[{l:"Ce este?",t:"Ce privești sus, deasupra"},{l:"Ce are?",t:"Nori, soare, lună, stele"}]}],
+    "DE":[{w:"deal",      hints:[{l:"Ce este?",t:"Teren mai înalt"},{l:"Unde?",t:"La țară, în natură"}]},
+          {w:"deget",     hints:[{l:"Ce este?",t:"Parte a mâinii"},{l:"Câte?",t:"Cinci la fiecare mână"}]}],
+    "FE":[{w:"femeie",    hints:[{l:"Cine este?",t:"Persoană de sex feminin"},{l:"Exemplu?",t:"Mamă, bunică, soră, soție"}]},
+          {w:"fereastră", hints:[{l:"Ce este?",t:"Deschizătură în perete"},{l:"La ce?",t:"Intră lumina și aerul"}]}],
+    "GE":[{w:"geantă",    hints:[{l:"Ce este?",t:"Obiect din piele sau pânză"},{l:"La ce?",t:"Pui lucruri în ea, o porți"}]},
+          {w:"geam",      hints:[{l:"Ce este?",t:"Material transparent"},{l:"Unde?",t:"La fereastră sau ușă"}]}],
+    "HE":[{w:"helicopter",hints:[{l:"Ce este?",t:"Vehicul care zboară"},{l:"Cum?",t:"Are elice în loc de aripi"}]}],
+    "LE":[{w:"lemn",      hints:[{l:"Ce este?",t:"Material din copac"},{l:"La ce?",t:"Mobilă, foc, construcții"}]},
+          {w:"leu",       hints:[{l:"Ce este?",t:"Animal mare și puternic"},{l:"Unde?",t:"La zoo sau în Africa"}]}],
+    "ME":[{w:"medic",     hints:[{l:"Cine este?",t:"Persoana care tratează bolile"},{l:"Unde?",t:"La spital sau cabinet"}]},
+          {w:"mere",      hints:[{l:"Ce este?",t:"Fruct roșu sau verde"},{l:"Unde?",t:"La piață, magazin sau pom"}]}],
+    "NE":[{w:"negru",     hints:[{l:"Ce este?",t:"O culoare"},{l:"Exemple?",t:"Noaptea, cărbunele, tăciunele"}]}],
+    "PE":[{w:"pepene",    hints:[{l:"Ce este?",t:"Fruct mare și verde"},{l:"Cum e înăuntru?",t:"Roșu și dulce, cu semințe"}]},
+          {w:"perie",     hints:[{l:"Ce este?",t:"Obiect cu peri"},{l:"La ce?",t:"Să te piepteni sau să te speli pe dinți"}]}],
+    "RE":[{w:"restaurant",hints:[{l:"Ce este?",t:"Local unde mănânci"},{l:"Cine te servește?",t:"Un chelner sau ospătar"}]},
+          {w:"rece",      hints:[{l:"Ce înseamnă?",t:"Temperatură joasă"},{l:"Exemplu?",t:"Gheața, zăpada, iarna"}]}],
+    "SE":[{w:"seară",     hints:[{l:"Ce este?",t:"Parte a zilei"},{l:"Când?",t:"După apus, înainte de noapte"}]},
+          {w:"semn",      hints:[{l:"Ce este?",t:"Un simbol sau marcaj"},{l:"La ce?",t:"Să comunici sau să indici ceva"}]}],
+    "ȘE":[{w:"șef",       hints:[{l:"Cine este?",t:"Persoana care conduce"},{l:"Unde?",t:"La muncă sau în organizație"}]}],
+    "TE":[{w:"telefon",   hints:[{l:"Ce este?",t:"Dispozitiv de comunicare"},{l:"La ce?",t:"Să suni sau trimiți mesaje"}]},
+          {w:"televizor", hints:[{l:"Ce este?",t:"Ecran mare în casă"},{l:"La ce?",t:"Să te uiți la filme și știri"}]}],
+    "ȚE":[{w:"țelină",    hints:[{l:"Ce este?",t:"Legumă albă cu miros puternic"},{l:"Unde?",t:"La piață sau în supă"}]}],
+    "VE":[{w:"vecin",     hints:[{l:"Cine este?",t:"Persoana care locuiește alături"},{l:"Unde?",t:"Lângă casa ta"}]},
+          {w:"verde",     hints:[{l:"Ce este?",t:"O culoare"},{l:"Exemple?",t:"Frunze, iarbă, castraveți"}]}],
+    "ZE":[{w:"zebră",     hints:[{l:"Ce este?",t:"Animal cu dungi albe și negre"},{l:"Unde?",t:"La zoo sau în Africa"}]},
+          {w:"zece",      hints:[{l:"Ce este?",t:"Un număr"},{l:"Câte degete?",t:"Ai zece degete la mâini"}]}],
+    "BI":[{w:"birou",     hints:[{l:"Ce este?",t:"Masă specială de lucru"},{l:"Unde?",t:"La serviciu sau în casă"}]},
+          {w:"bicicletă", hints:[{l:"Ce este?",t:"Vehicul cu două roți"},{l:"La ce?",t:"Să mergi cu pedalele"}]}],
+    "CI":[{w:"ciocolată", hints:[{l:"Ce este?",t:"Dulce maro"},{l:"Din ce?",t:"Din cacao și zahăr"}]},
+          {w:"cireașă",   hints:[{l:"Ce este?",t:"Fruct mic și roșu"},{l:"Când?",t:"Se coace vara"}]}],
+    "DI":[{w:"dimineață", hints:[{l:"Ce este?",t:"Începutul zilei"},{l:"Când?",t:"Când răsare soarele"}]}],
+    "FI":[{w:"fiică",     hints:[{l:"Cine este?",t:"Copil feminin al cuiva"},{l:"Al cui?",t:"Al părinților ei"}]},
+          {w:"fier",      hints:[{l:"Ce este?",t:"Metal greu și solid"},{l:"La ce?",t:"Construcții, unelte, cuie"}]}],
+    "GI":[{w:"gimnastică",hints:[{l:"Ce este?",t:"Sport cu mișcări ale corpului"},{l:"Unde?",t:"La sală sau la competiții"}]}],
+    "HI":[{w:"hipopotam", hints:[{l:"Ce este?",t:"Animal mare care trăiește în apă"},{l:"Unde?",t:"La zoo sau în Africa"}]}],
+    "LI":[{w:"limbă",     hints:[{l:"Ce este?",t:"Organ în gură"},{l:"La ce?",t:"Să vorbești și să guști"}]},
+          {w:"litru",     hints:[{l:"Ce este?",t:"Unitate de măsură pentru lichide"},{l:"Exemplu?",t:"O sticlă de apă"}]}],
+    "MI":[{w:"miere",     hints:[{l:"Ce este?",t:"Substanță dulce și vâscoasă"},{l:"De la cine?",t:"De la albine"}]},
+          {w:"minge",     hints:[{l:"Ce este?",t:"Obiect rotund"},{l:"La ce?",t:"La fotbal sau baschet"}]}],
+    "NI":[{w:"nisip",     hints:[{l:"Ce este?",t:"Granule mici și fine"},{l:"Unde?",t:"La plajă sau în deșert"}]}],
+    "PI":[{w:"piersică",  hints:[{l:"Ce este?",t:"Fruct portocaliu și moale"},{l:"Când?",t:"Se coace vara"}]},
+          {w:"pian",      hints:[{l:"Ce este?",t:"Instrument muzical cu clape"},{l:"Cum cântă?",t:"Apeși clape albe și negre"}]}],
+    "RI":[{w:"ridiche",   hints:[{l:"Ce este?",t:"Legumă mică și rotundă"},{l:"Unde?",t:"În pământ sau la piață"}]}],
+    "SI":[{w:"sirop",     hints:[{l:"Ce este?",t:"Lichid dulce și vâscos"},{l:"La ce?",t:"Pui în apă sau la medicamente"}]}],
+    "ȘI":[{w:"șiret",     hints:[{l:"Ce este?",t:"Șnur lung și subțire"},{l:"La ce?",t:"Să legi pantofii"}]}],
+    "TI":[{w:"tigru",     hints:[{l:"Ce este?",t:"Animal mare cu dungi portocalii"},{l:"Unde?",t:"În Asia sau la zoo"}]},
+          {w:"timbru",    hints:[{l:"Ce este?",t:"Mic desen lipit pe plic"},{l:"La ce?",t:"Să trimiți o scrisoare"}]}],
+    "ȚI":[{w:"țipăt",     hints:[{l:"Ce este?",t:"Sunet puternic"},{l:"Când?",t:"Când te sperii sau te doare"}]}],
+    "VI":[{w:"vișine",    hints:[{l:"Ce este?",t:"Fruct mic și roșu-închis"},{l:"Unde?",t:"Din pom sau la piață"}]},
+          {w:"vis",       hints:[{l:"Ce este?",t:"Ce trăiești când dormi"},{l:"Când?",t:"Noaptea, în somn"}]}],
+    "ZI":[{w:"ziua",      hints:[{l:"Ce este?",t:"Unitate de timp"},{l:"Câte ore?",t:"24 de ore"}]},
+          {w:"ziar",      hints:[{l:"Ce este?",t:"Foi cu știri tipărite"},{l:"Când apare?",t:"Zilnic sau săptămânal"}]}],
+    "BO":[{w:"borcan",    hints:[{l:"Ce este?",t:"Recipient de sticlă"},{l:"La ce?",t:"Pui dulceață sau murături"}]},
+          {w:"bomboană",  hints:[{l:"Ce este?",t:"Dulciuri mici și colorate"},{l:"Cum e?",t:"Dulce, cu gust de fructe"}]}],
+    "CO":[{w:"coș",       hints:[{l:"Ce este?",t:"Recipient împletit"},{l:"La ce?",t:"Pui fructe, rufe sau gunoi"}]},
+          {w:"copil",     hints:[{l:"Cine este?",t:"Persoană mică, tânără"},{l:"Unde?",t:"Acasă, la școală, la joacă"}]}],
+    "DO":[{w:"dormitor",  hints:[{l:"Ce este?",t:"Cameră din casă"},{l:"La ce?",t:"Să dormi"}]},
+          {w:"doctor",    hints:[{l:"Cine este?",t:"Specialist medical"},{l:"Unde?",t:"La spital sau cabinet"}]}],
+    "FO":[{w:"foarfece",  hints:[{l:"Ce este?",t:"Unealtă cu două lame"},{l:"La ce?",t:"Să tai hârtie sau material"}]},
+          {w:"fotbal",    hints:[{l:"Ce este?",t:"Sport cu minge"},{l:"Cum?",t:"Joci cu piciorul, pe teren"}]}],
+    "GO":[{w:"gogoașă",   hints:[{l:"Ce este?",t:"Prăjitură rotundă prăjită"},{l:"Unde?",t:"La patiserie"}]}],
+    "HO":[{w:"hotel",     hints:[{l:"Ce este?",t:"Clădire cu camere de dormit"},{l:"Cine stă?",t:"Turiști în vacanță"}]}],
+    "JO":[{w:"joc",       hints:[{l:"Ce este?",t:"Activitate de distracție"},{l:"Exemple?",t:"Cărți, șah, puzzle, sport"}]},
+          {w:"jucărie",   hints:[{l:"Ce este?",t:"Obiect pentru copii"},{l:"Unde?",t:"În camera copilului"}]}],
+    "LO":[{w:"loc",       hints:[{l:"Ce este?",t:"Un spațiu sau o poziție"},{l:"Exemplu?",t:"Locul tău preferat"}]}],
+    "MO":[{w:"morcovi",   hints:[{l:"Ce este?",t:"Legumă portocalie"},{l:"Unde?",t:"În pământ sau la piață"}]}],
+    "NO":[{w:"noapte",    hints:[{l:"Ce este?",t:"Când e întuneric afară"},{l:"Când?",t:"După apusul soarelui"}]},
+          {w:"noroc",     hints:[{l:"Ce înseamnă?",t:"Să-ți meargă bine"},{l:"Când urezi?",t:"La un examen sau concurs"}]}],
+    "PO":[{w:"poartă",    hints:[{l:"Ce este?",t:"Intrare cu deschizătură"},{l:"Unde?",t:"La casă, curte sau stadion"}]},
+          {w:"pod",       hints:[{l:"Ce este?",t:"Construcție peste apă"},{l:"La ce?",t:"Să treci peste râu"}]}],
+    "RO":[{w:"roșie",     hints:[{l:"Ce este?",t:"Legumă sau fruct roșu"},{l:"Unde?",t:"La piață sau în grădină"}]},
+          {w:"rochie",    hints:[{l:"Ce este?",t:"Îmbrăcăminte pentru femei"},{l:"Când?",t:"La ocazii speciale sau vara"}]}],
+    "SO":[{w:"soare",     hints:[{l:"Ce este?",t:"Stea care ne încălzește"},{l:"Unde?",t:"Pe cer, ziua"}]},
+          {w:"soră",      hints:[{l:"Cine este?",t:"Fată din aceeași familie"},{l:"Al cui?",t:"A acelorași părinți"}]}],
+    "ȘO":[{w:"șofer",     hints:[{l:"Cine este?",t:"Persoana care conduce vehicule"},{l:"Ce conduce?",t:"Mașină, autobuz sau taxi"}]},
+          {w:"șosea",     hints:[{l:"Ce este?",t:"Drum asfaltat"},{l:"Unde?",t:"Afară, între orașe"}]}],
+    "TO":[{w:"tort",      hints:[{l:"Ce este?",t:"Prăjitură mare, rotundă"},{l:"Când?",t:"La aniversare sau sărbătoare"}]},
+          {w:"toamnă",    hints:[{l:"Ce este?",t:"Anotimp"},{l:"Când?",t:"Septembrie, octombrie, noiembrie"}]}],
+    "ȚO":[{w:"țol",       hints:[{l:"Ce este?",t:"Covor sau pătură groasă"},{l:"Unde?",t:"Pe podea sau pe pat"}]}],
+    "VO":[{w:"voce",      hints:[{l:"Ce este?",t:"Sunetul produs când vorbești"},{l:"La ce?",t:"Să comunici sau să cânți"}]},
+          {w:"volan",     hints:[{l:"Ce este?",t:"Cerc la mașină"},{l:"La ce?",t:"Să ghidezi direcția mașinii"}]}],
+    "ZO":[{w:"zoo",       hints:[{l:"Ce este?",t:"Loc cu animale din toată lumea"},{l:"La ce?",t:"Să vizitezi și să privești animale"}]}],
+    "BU":[{w:"bunică",    hints:[{l:"Cine este?",t:"Femeie în familie"},{l:"Cine?",t:"Mama mamei sau a tatălui"}]},
+          {w:"buzunar",   hints:[{l:"Ce este?",t:"Mică deschizătură în haină"},{l:"La ce?",t:"Pui chei, bani sau telefon"}]}],
+    "CU":[{w:"curcubeu",  hints:[{l:"Ce este?",t:"Arc colorat pe cer"},{l:"Când?",t:"După ploaie, când e soare"}]},
+          {w:"cuptor",    hints:[{l:"Ce este?",t:"Aparat care coace"},{l:"La ce?",t:"Să coci pâine sau prăjituri"}]}],
+    "DU":[{w:"dulap",     hints:[{l:"Ce este?",t:"Mobilă înaltă"},{l:"La ce?",t:"Pui haine sau obiecte înăuntru"}]},
+          {w:"duș",       hints:[{l:"Ce este?",t:"Jet de apă"},{l:"La ce?",t:"Să te speli pe corp"}]}],
+    "FU":[{w:"fulg",      hints:[{l:"Ce este?",t:"Cristal mic și alb"},{l:"Când?",t:"Iarna, când ninge"}]},
+          {w:"fular",     hints:[{l:"Ce este?",t:"Material lung în jurul gâtului"},{l:"Când?",t:"Iarna, să te încălzești"}]}],
+    "HU":[{w:"hurdugai",  hints:[{l:"Ce înseamnă?",t:"Obiect mare și greoi"},{l:"Cum?",t:"Cam mare și incomod de purtat"}]}],
+    "JU":[{w:"jumătate",  hints:[{l:"Ce înseamnă?",t:"Dintr-un întreg, o parte egală"},{l:"Exemplu?",t:"Jumătate de măr sau de oră"}]},
+          {w:"jurnal",    hints:[{l:"Ce este?",t:"Caiet cu gânduri zilnice"},{l:"La ce?",t:"Să scrii ce simți și ce faci"}]}],
+    "LU":[{w:"lună",      hints:[{l:"Ce este?",t:"Corp ceresc care luminează noaptea"},{l:"Unde?",t:"Pe cer, noaptea"}]},
+          {w:"lumânare",  hints:[{l:"Ce este?",t:"Baton de ceară cu fitil"},{l:"La ce?",t:"Lumină sau la sărbători"}]}],
+    "MU":[{w:"munte",     hints:[{l:"Ce este?",t:"Formă de relief înaltă"},{l:"Ce are?",t:"Vârfuri, păduri, văi"}]},
+          {w:"muzică",    hints:[{l:"Ce este?",t:"Sunete organizate plăcut"},{l:"Cum?",t:"Cu instrumente sau cu vocea"}]}],
+    "NU":[{w:"nuc",       hints:[{l:"Ce este?",t:"Pom mare cu fructe"},{l:"Ce produce?",t:"Nuci comestibile"}]},
+          {w:"număr",     hints:[{l:"Ce este?",t:"Cifre și cantități"},{l:"Exemple?",t:"1, 2, 3, 10, 100"}]}],
+    "PU":[{w:"pui",       hints:[{l:"Ce este?",t:"Animal tânăr sau carne"},{l:"Cum?",t:"Pui de găină, mic și galben sau fript"}]}],
+    "RU":[{w:"rucsac",    hints:[{l:"Ce este?",t:"Geantă purtată în spate"},{l:"La ce?",t:"La școală sau drumeție"}]}],
+    "SU":[{w:"suc",       hints:[{l:"Ce este?",t:"Băutură din fructe"},{l:"Cum?",t:"Din portocale, mere sau roșii"}]}],
+    "ȘU":[{w:"șurub",     hints:[{l:"Ce este?",t:"Piesă metalică spiralată"},{l:"La ce?",t:"Să fixezi sau unești piese"}]}],
+    "TU":[{w:"tunet",     hints:[{l:"Ce este?",t:"Zgomot puternic"},{l:"Când?",t:"În furtună, după fulger"}]}],
+    "BĂ":[{w:"bărbat",    hints:[{l:"Cine este?",t:"Persoană de sex masculin"},{l:"Exemple?",t:"Tată, frate, soț, bunic"}]},
+          {w:"bătrân",    hints:[{l:"Ce înseamnă?",t:"Persoană cu vârstă înaintată"},{l:"Cum e?",t:"Are experiență și înțelepciune"}]}],
+    "CĂ":[{w:"căpșună",   hints:[{l:"Ce este?",t:"Fruct mic, roșu și aromat"},{l:"Când?",t:"Se coace primăvara"}]},
+          {w:"căciulă",   hints:[{l:"Ce este?",t:"Acoperă capul, din lână"},{l:"Când?",t:"Iarna, să te ferești de frig"}]}],
+    "FĂ":[{w:"făină",     hints:[{l:"Ce este?",t:"Pudră albă din grâu"},{l:"La ce?",t:"Pâine, cozonac, prăjituri"}]}],
+    "HĂ":[{w:"hărți",     hints:[{l:"Ce este?",t:"Desenul unui teritoriu"},{l:"La ce?",t:"Să te orientezi și să găsești drumul"}]}],
+    "MĂ":[{w:"măr",       hints:[{l:"Ce este?",t:"Fruct rotund"},{l:"Culori?",t:"Roșu sau verde, dulce sau acrișor"}]},
+          {w:"mătură",    hints:[{l:"Ce este?",t:"Unealtă cu mâner lung"},{l:"La ce?",t:"Să mături podeaua"}]}],
+    "PĂ":[{w:"pădure",    hints:[{l:"Ce este?",t:"Loc cu mulți copaci"},{l:"Ce găsești?",t:"Copaci, animale, ciuperci"}]},
+          {w:"păsăre",    hints:[{l:"Ce este?",t:"Animal cu aripi și pene"},{l:"Ce face?",t:"Zboară și cântă"}]}],
+    "RĂ":[{w:"răspuns",   hints:[{l:"Ce este?",t:"Ce dai când ești întrebat"},{l:"Opus la?",t:"Întrebare"}]}],
+    "SĂ":[{w:"sănătate",  hints:[{l:"Ce este?",t:"Starea de a fi bine"},{l:"Cum?",t:"Fără boală, cu energie"}]}],
+    "VĂ":[{w:"văl",       hints:[{l:"Ce este?",t:"Material fin și transparent"},{l:"Cine?",t:"Mireasa la nuntă"}]}],
+    "CÂ":[{w:"câine",     hints:[{l:"Ce este?",t:"Animal domestic, prieten al omului"},{l:"Unde?",t:"Acasă sau în curte"}]},
+          {w:"câmp",      hints:[{l:"Ce este?",t:"Teren deschis și plat"},{l:"Ce crește?",t:"Grâu, porumb, flori de câmp"}]}],
+    "FÂ":[{w:"fântână",   hints:[{l:"Ce este?",t:"Sursă de apă"},{l:"Unde?",t:"În curte sau la sat"}]}],
+    "GÂ":[{w:"gâscă",     hints:[{l:"Ce este?",t:"Pasăre mare și albă"},{l:"Unde?",t:"La curte, lângă apă"}]},
+          {w:"gât",       hints:[{l:"Ce este?",t:"Parte a corpului"},{l:"Unde?",t:"Între cap și umeri"}]}],
+    "HÂ":[{w:"hârtie",    hints:[{l:"Ce este?",t:"Material subțire și alb"},{l:"La ce?",t:"Să scrii, să desenezi"}]}],
+    "RÂ":[{w:"râu",       hints:[{l:"Ce este?",t:"Curs de apă"},{l:"Unde?",t:"Curge prin natură, la munte sau câmpie"}]}],
+};
+
+let silabeQueue = [];
+let silabeIdx   = 0;
+
+function startSilabe() {
+    silabeQueue = shuffle([...SILABE_LIST]).slice(0, 10);
+    silabeIdx   = 0;
+    show("silabeScreen");
+    loadSilaba();
+}
+
+function loadSilaba() {
+    const sil = silabeQueue[silabeIdx];
+    document.getElementById("silProgLbl").textContent = `${silabeIdx + 1} / ${silabeQueue.length}`;
+    document.getElementById("silProgFill").style.width = (silabeIdx / silabeQueue.length * 100) + "%";
+    document.getElementById("silDisplay").textContent  = sil + "_";
+    silabaToPhase(1);
+}
+
+function silabaToPhase(phase) {
+    const sil = silabeQueue[silabeIdx];
+    document.getElementById("silPhase1").classList.toggle("hidden", phase !== 1);
+    document.getElementById("silPhase2").classList.toggle("hidden", phase !== 2);
+    document.getElementById("silPhase3").classList.toggle("hidden", phase !== 3);
+    const labels = {
+        1: "Citește această silabă",
+        2: `Spune un cuvânt care începe cu ${sil}_`,
+        3: `Hai să descoperim împreună un cuvânt cu ${sil}_`
+    };
+    document.getElementById("silTaskLabel").textContent = labels[phase];
+    if (phase === 3) initSilabaHints(sil);
+}
+
+function playSilaba() {
+    const sil    = silabeQueue[silabeIdx];
+    const stored = localStorage.getItem("silaba_audio_" + sil);
+    if (stored) { new Audio(stored).play(); return; }
+    say(sil, 0.75);
+}
+
+// ── Hint system state ──
+let silabaCandidates    = [];
+let silabaCandidateIdx  = 0;
+let silabaHintIdx       = 0;
+
+function initSilabaHints(sil) {
+    silabaCandidates   = getSilabaWordHints(sil);
+    silabaCandidateIdx = 0;
+    silabaHintIdx      = 0;
+    renderSilabaHintPanel(sil);
+}
+
+function renderSilabaHintPanel(sil) {
+    const candidate = silabaCandidates[silabaCandidateIdx];
+    silabaHintIdx   = 0;
+    document.getElementById("silHintsList").innerHTML = "";
+    document.getElementById("silNextHintBtn").classList.toggle("hidden", !candidate);
+    document.getElementById("silChangeWordBtn").classList.add("hidden");
+    document.getElementById("silHintNote").textContent = candidate
+        ? `Mă gândesc la un cuvânt care începe cu ${sil}_ — descoperi ce este?`
+        : `Nu am mai găsit cuvinte — apasă „Am spus cuvântul" ca să mergem mai departe.`;
+}
+
+function revealNextSilabaHint() {
+    const sil       = silabeQueue[silabeIdx];
+    const candidate = silabaCandidates[silabaCandidateIdx];
+    if (!candidate) return;
+
+    // Build ordered hints: semantic ones + letter hint last
+    const nextLetterAfterSyl = candidate.w.slice(sil.length, sil.length + 1).toUpperCase();
+    const allHints = [
+        ...candidate.hints,
+        { label: "Prima literă după silabă", text: nextLetterAfterSyl || "—" }
+    ];
+
+    if (silabaHintIdx >= allHints.length) return;
+
+    const { label, text } = allHints[silabaHintIdx];
+    const div = document.createElement("div");
+    div.style.cssText = "background:#F7F9FF;border:1px solid #D6E4F5;border-radius:10px;padding:10px 14px;width:100%;box-sizing:border-box;";
+    div.innerHTML = `<div style="font-size:0.75rem;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:3px;">${label}</div>
+                     <div style="font-size:1.1rem;font-weight:700;color:var(--text);">${text}</div>`;
+    document.getElementById("silHintsList").appendChild(div);
+    silabaHintIdx++;
+
+    if (silabaHintIdx >= allHints.length) {
+        document.getElementById("silNextHintBtn").classList.add("hidden");
+        document.getElementById("silChangeWordBtn").textContent = `→ Alt cuvânt cu ${sil}_`;
+        document.getElementById("silChangeWordBtn").classList.remove("hidden");
+    }
+}
+
+function nextSilabaCandidate() {
+    const sil = silabeQueue[silabeIdx];
+    silabaCandidateIdx++;
+    if (silabaCandidateIdx >= silabaCandidates.length) {
+        document.getElementById("silHintNote").textContent = `Am epuizat cuvintele — apasă „Am spus cuvântul" ca să mergem mai departe.`;
+        document.getElementById("silChangeWordBtn").classList.add("hidden");
+        document.getElementById("silNextHintBtn").classList.add("hidden");
+        document.getElementById("silHintsList").innerHTML = "";
+        return;
+    }
+    renderSilabaHintPanel(sil);
+}
+
+function getSilabaWordHints(sil) {
+    // Sursă primară: dicționarul dedicat
+    const primary = (SILABE_WORDS[sil] || []).map(entry => ({
+        w: entry.w,
+        hints: entry.hints.map(h => ({ label: h.l, text: h.t }))
+    }));
+    if (primary.length > 0) return shuffle(primary);
+
+    // Fallback: caută în VOC_SFA și VOC_EVOCARE
+    const results  = [];
+    const seen     = new Set();
+    const silUpper = sil.toUpperCase();
+    Object.entries(VOC_SFA).forEach(([word, data]) => {
+        if (seen.has(word) || !word.toUpperCase().startsWith(silUpper)) return;
+        results.push({ w: word, hints: [
+            { label: "Unde se găsește", text: data.loc.cor },
+            { label: "La ce se folosește", text: data.fun.cor }
+        ]});
+        seen.add(word);
+    });
+    Object.values(VOC_EVOCARE).forEach(cat => cat.words.forEach(word => {
+        if (seen.has(word.w) || !word.w.toUpperCase().startsWith(silUpper)) return;
+        if (word.sfa && word.sfa.length > 0) {
+            results.push({ w: word.w, hints: word.sfa.map(q => ({ label: q.q, text: q.opts[0] })) });
+            seen.add(word.w);
+        }
+    }));
+    return shuffle(results);
+}
+
+function nextSilaba() {
+    silabeIdx++;
+    if (silabeIdx >= silabeQueue.length) {
+        document.getElementById("silProgFill").style.width = "100%";
+        finalizeCompletion();
+        // Ecran de final personalizat pentru silabe
+        document.getElementById("finEmoji").textContent = "🌟";
+        document.getElementById("scoreNum").textContent = silabeQueue.length;
+        document.getElementById("scoreSub").textContent = "silabe exersate";
+        document.getElementById("finMsg").textContent = "Foarte bine! Ai exersat toate silabele de azi!";
+        document.getElementById("finNoHint").classList.add("hidden");
+        show("completionScreen");
+    } else {
+        loadSilaba();
+    }
+}
+
+// ═══════════════════════════════════════════
+// SILABE RECORDING
+// ═══════════════════════════════════════════
+
+let silRecorder = null;
+let silRecChunks = [];
+
+function renderSilabeRecordList() {
+    const list = document.getElementById("silRecordList");
+    list.innerHTML = "";
+    SILABE_LIST.forEach(sil => {
+        const hasAudio = !!localStorage.getItem("silaba_audio_" + sil);
+        const row = document.createElement("div");
+        row.className = "sil-record-row";
+        row.id = "silrow_" + sil;
+
+        const lbl = document.createElement("div");
+        lbl.className = "sil-record-label";
+        lbl.textContent = sil + "_";
+
+        const btns = document.createElement("div");
+        btns.style.cssText = "display:flex;gap:8px;align-items:center;";
+
+        const recBtn = document.createElement("button");
+        recBtn.className = "btn sil-rec-btn";
+        recBtn.id = "silRecBtn_" + sil;
+        recBtn.textContent = "🔴";
+        recBtn.onclick = () => startSilabaRecording(sil);
+
+        btns.appendChild(recBtn);
+
+        if (hasAudio) {
+            const playBtn = document.createElement("button");
+            playBtn.className = "btn sil-play-btn";
+            playBtn.textContent = "▶";
+            playBtn.onclick = () => { const s = localStorage.getItem("silaba_audio_" + sil); if (s) new Audio(s).play(); };
+            btns.appendChild(playBtn);
+
+            const check = document.createElement("span");
+            check.className = "sil-done-mark";
+            check.textContent = "✓";
+            btns.appendChild(check);
+        }
+
+        row.appendChild(lbl);
+        row.appendChild(btns);
+        list.appendChild(row);
+    });
+}
+
+function startSilabaRecording(sil) {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert("Microfonul nu este disponibil pe acest dispozitiv.");
+        return;
+    }
+    silRecChunks = [];
+    const btn = document.getElementById("silRecBtn_" + sil);
+
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        silRecorder = new MediaRecorder(stream);
+        silRecorder.ondataavailable = e => { if (e.data.size > 0) silRecChunks.push(e.data); };
+        silRecorder.onstop = () => {
+            const blob   = new Blob(silRecChunks, { type: "audio/webm" });
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                localStorage.setItem("silaba_audio_" + sil, reader.result);
+                stream.getTracks().forEach(t => t.stop());
+                renderSilabeRecordList();
+            };
+            reader.readAsDataURL(blob);
+        };
+        silRecorder.start();
+        btn.textContent = "⏹";
+        btn.className   = "btn btn-hint";
+        btn.onclick     = () => { if (silRecorder && silRecorder.state !== "inactive") silRecorder.stop(); };
+    }).catch(() => alert("Nu am putut accesa microfonul. Verifică permisiunile."));
 }
 
 // INIT

@@ -1,4 +1,6 @@
-<html lang="ro"><head>
+<!DOCTYPE html>
+<html lang="ro">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>AfazieApp – Exerciții de limbaj</title>
@@ -541,7 +543,7 @@
 <body>
 
 <!-- ════════════════════ HOME ════════════════════ -->
-<div id="homeScreen" class="screen hidden">
+<div id="homeScreen" class="screen">
     <div class="home-header">
         <div class="home-logo">🧠</div>
         <div class="home-title">AfazieApp</div>
@@ -619,6 +621,14 @@
             </div>
             <span class="mode-arrow">▶</span>
         </button>
+        <button class="mode-btn" id="modeBtn-fluenta" onclick="handleModeBtn('fluenta')">
+            <span class="mode-icon">⏱️</span>
+            <div class="mode-info">
+                <div>Fluență verbală</div>
+                <div class="mode-desc">Spune cât mai multe cuvinte dintr-o categorie în 60 de secunde</div>
+            </div>
+            <span class="mode-arrow">▶</span>
+        </button>
     </div>
 
     <div style="margin-top:8px;text-align:center;">
@@ -635,59 +645,17 @@
 
     <div id="catPickArrange" class="hidden" style="width:100%;display:flex;flex-direction:column;gap:10px;">
         <div class="section-label">Categorie de cuvinte</div>
-        <div class="cat-grid" id="catGrid"><div class="cat-card selected"><div class="ci">🍎</div>
-                         <div class="cn">Fructe</div>
-                         <div class="ck">5 cuvinte</div></div><div class="cat-card"><div class="ci">🥕</div>
-                         <div class="cn">Legume</div>
-                         <div class="ck">5 cuvinte</div></div><div class="cat-card"><div class="ci">🐾</div>
-                         <div class="cn">Animale</div>
-                         <div class="ck">12 cuvinte</div></div><div class="cat-card"><div class="ci">🍽️</div>
-                         <div class="cn">Mâncare</div>
-                         <div class="ck">8 cuvinte</div></div><div class="cat-card"><div class="ci">🏠</div>
-                         <div class="cn">Casă</div>
-                         <div class="ck">8 cuvinte</div></div><div class="cat-card"><div class="ci">🌿</div>
-                         <div class="cn">Natură</div>
-                         <div class="ck">9 cuvinte</div></div><div class="cat-card"><div class="ci">🤚</div>
-                         <div class="cn">Corp</div>
-                         <div class="ck">8 cuvinte</div></div></div>
+        <div class="cat-grid" id="catGrid"></div>
     </div>
 
     <div id="catPickEvoc" class="hidden" style="width:100%;display:flex;flex-direction:column;gap:10px;">
         <div class="section-label">Categorie de cuvinte</div>
-        <div class="cat-grid" id="evocCatGrid"><div class="cat-card selected"><div class="ci">🏠</div>
-                         <div class="cn">Casă</div>
-                         <div class="ck">16 cuvinte</div></div><div class="cat-card"><div class="ci">🍽️</div>
-                         <div class="cn">Mâncare</div>
-                         <div class="ck">8 cuvinte</div></div><div class="cat-card"><div class="ci">👨‍👩‍👧‍👦</div>
-                         <div class="cn">Familie</div>
-                         <div class="ck">9 cuvinte</div></div><div class="cat-card"><div class="ci">🌍</div>
-                         <div class="cn">Diverse</div>
-                         <div class="ck">5 cuvinte</div></div><div class="cat-card"><div class="ci">🛁</div>
-                         <div class="cn">Lucruri din baie</div>
-                         <div class="ck">6 cuvinte</div></div><div class="cat-card"><div class="ci">🍳</div>
-                         <div class="cn">Lucruri din bucătărie</div>
-                         <div class="ck">6 cuvinte</div></div><div class="cat-card"><div class="ci">👗</div>
-                         <div class="cn">Haine</div>
-                         <div class="ck">6 cuvinte</div></div><div class="cat-card"><div class="ci">🫀</div>
-                         <div class="cn">Corpul uman</div>
-                         <div class="ck">6 cuvinte</div></div><div class="cat-card"><div class="ci">🚗</div>
-                         <div class="cn">Transport</div>
-                         <div class="ck">6 cuvinte</div></div></div>
+        <div class="cat-grid" id="evocCatGrid"></div>
     </div>
 
     <div id="catPickFraze" class="hidden" style="width:100%;display:flex;flex-direction:column;gap:10px;">
         <div class="section-label">Scenariu</div>
-        <div class="cat-grid" id="frazeCatGrid"><div class="cat-card selected"><div class="ci">🛒</div>
-                         <div class="cn">La magazin</div>
-                         <div class="ck">7 fraze</div></div><div class="cat-card"><div class="ci">🏥</div>
-                         <div class="cn">La doctor</div>
-                         <div class="ck">7 fraze</div></div><div class="cat-card"><div class="ci">📞</div>
-                         <div class="cn">La telefon</div>
-                         <div class="ck">7 fraze</div></div><div class="cat-card"><div class="ci">👋</div>
-                         <div class="cn">Salutări</div>
-                         <div class="ck">8 fraze</div></div><div class="cat-card"><div class="ci">🏠</div>
-                         <div class="cn">Cereri acasă</div>
-                         <div class="ck">8 fraze</div></div></div>
+        <div class="cat-grid" id="frazeCatGrid"></div>
         <div class="section-label" style="margin-top:4px;">Nivel de dificultate</div>
         <div class="nivel-select-row" id="frazeNivelRow">
             <button class="nivel-btn selected" id="nivelBtn-1" onclick="selectFrazeNivel(1)">1<br>Ascultă<br>și repetă</button>
@@ -716,12 +684,12 @@
 
         <div class="btn-row">
             <button class="btn btn-sound" id="arrSoundBtn">🔊&nbsp; Ascultă</button>
-            <button class="btn btn-hint" id="arrHintBtn">💡&nbsp; Ajutor</button>
+            <button class="btn btn-hint"  id="arrHintBtn">💡&nbsp; Ajutor</button>
         </div>
 
         <div class="tiles-area" id="tilesArea"></div>
 
-        <button class="backspace-btn" id="backspaceBtn" disabled="">⌫&nbsp; Șterge ultima literă</button>
+        <button class="backspace-btn" id="backspaceBtn" disabled>⌫&nbsp; Șterge ultima literă</button>
 
         <div class="feedback hidden" id="arrFeedback"></div>
         <button class="btn btn-success hidden" id="arrNextBtn">Următor →</button>
@@ -839,8 +807,8 @@
 
             <div style="display:flex;flex-direction:column;gap:10px;width:100%;">
                 <button class="btn btn-hint-green" id="descHint1Btn">💡&nbsp; Prima literă</button>
-                <button class="btn btn-hint" id="descHint2Btn">💡&nbsp; Prima silabă</button>
-                <button class="btn btn-sound" id="descRevealBtn">🔊&nbsp; Arată și ascultă cuvântul</button>
+                <button class="btn btn-hint"       id="descHint2Btn">💡&nbsp; Prima silabă</button>
+                <button class="btn btn-sound"      id="descRevealBtn">🔊&nbsp; Arată și ascultă cuvântul</button>
             </div>
 
             <button class="btn btn-success hidden" id="descNextBtn">✓&nbsp; Următor →</button>
@@ -909,8 +877,8 @@
             <button class="btn btn-sound" id="frazeSoundBtn" style="flex:1;">🔊&nbsp; Normal</button>
             <button class="btn btn-sound" id="frazeSlowBtn" style="flex:1;">🐢&nbsp; Lent</button>
         </div>
-        <div id="frazeRepetaLabel" class="fraze-instruct hidden" style="text-align:center;">Repetă!</div>
-        <button class="btn btn-self-success" id="frazeSuccessBtn">✅&nbsp; Am repetat</button>
+        <div id="frazeRepetaLabel" class="fraze-instruct hidden" style="text-align:center;">Citește!</div>
+        <button class="btn btn-self-success" id="frazeSuccessBtn">✅&nbsp; Am citit</button>
         <button class="btn btn-success hidden" id="frazeNextBtn">✓&nbsp; Următor →</button>
     </div>
 </div>
@@ -937,16 +905,16 @@
 <div id="silabeScreen" class="screen hidden">
     <div class="ex-header">
         <button class="back-btn" onclick="goHome()">← Înapoi</button>
-        <div class="prog-lbl" id="silProgLbl">2 / 10</div>
+        <div class="prog-lbl" id="silProgLbl">1 / 5</div>
     </div>
-    <div class="prog-bar"><div class="prog-fill" id="silProgFill" style="width: 10%;"></div></div>
+    <div class="prog-bar"><div class="prog-fill" id="silProgFill" style="width:0%"></div></div>
 
     <div class="card" style="gap:14px;">
         <div class="task-label" id="silTaskLabel">Citește această silabă</div>
-        <div class="sil-display" id="silDisplay">RE_</div>
+        <div class="sil-display" id="silDisplay">BA_</div>
 
         <!-- Faza 1: Citește silaba -->
-        <div id="silPhase1" style="width:100%;display:flex;flex-direction:column;gap:10px;" class="">
+        <div id="silPhase1" style="width:100%;display:flex;flex-direction:column;gap:10px;">
             <button class="btn btn-success" style="font-size:1.1rem;padding:18px;" onclick="silabaToPhase(2)">✓&nbsp; Am citit-o</button>
             <button class="btn btn-hint" onclick="playSilaba()">🔊&nbsp; Ascultă silaba</button>
         </div>
@@ -969,7 +937,7 @@
 </div>
 
 <!-- ════════════════════ SILABE RECORD ════════════════════ -->
-<div id="silabeRecordScreen" class="screen">
+<div id="silabeRecordScreen" class="screen hidden">
     <div class="ex-header">
         <button class="back-btn" onclick="goHome()">← Înapoi</button>
         <div style="font-size:0.95rem;font-weight:700;color:var(--primary);">🎤 Înregistrează silabe</div>
@@ -980,7 +948,67 @@
     <button class="btn btn-primary" style="font-size:1rem;padding:15px;" onclick="downloadSilabeHtml()">
         ⬇&nbsp; Descarcă index.html cu sunete incluse
     </button>
-    <div id="silRecordList" style="width:100%;display:flex;flex-direction:column;gap:8px;"><div class="sil-record-row" id="silrow_BA"><div class="sil-record-label">BA_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_BA">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_CA"><div class="sil-record-label">CA_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_CA">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_DA"><div class="sil-record-label">DA_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_DA">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_FA"><div class="sil-record-label">FA_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_FA">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_GA"><div class="sil-record-label">GA_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_GA">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_HA"><div class="sil-record-label">HA_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_HA">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_JA"><div class="sil-record-label">JA_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_JA">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_LA"><div class="sil-record-label">LA_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_LA">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_MA"><div class="sil-record-label">MA_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_MA">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_NA"><div class="sil-record-label">NA_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_NA">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_PA"><div class="sil-record-label">PA_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_PA">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_RA"><div class="sil-record-label">RA_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_RA">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_SA"><div class="sil-record-label">SA_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_SA">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_ȘA"><div class="sil-record-label">ȘA_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_ȘA">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_TA"><div class="sil-record-label">TA_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_TA">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_ȚA"><div class="sil-record-label">ȚA_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_ȚA">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_VA"><div class="sil-record-label">VA_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_VA">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_ZA"><div class="sil-record-label">ZA_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_ZA">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_BE"><div class="sil-record-label">BE_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_BE">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_CE"><div class="sil-record-label">CE_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_CE">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_DE"><div class="sil-record-label">DE_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_DE">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_FE"><div class="sil-record-label">FE_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_FE">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_GE"><div class="sil-record-label">GE_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_GE">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_HE"><div class="sil-record-label">HE_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_HE">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_JE"><div class="sil-record-label">JE_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_JE">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_LE"><div class="sil-record-label">LE_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_LE">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_ME"><div class="sil-record-label">ME_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_ME">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_NE"><div class="sil-record-label">NE_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_NE">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_PE"><div class="sil-record-label">PE_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_PE">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_RE"><div class="sil-record-label">RE_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_RE">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_SE"><div class="sil-record-label">SE_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_SE">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_ȘE"><div class="sil-record-label">ȘE_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_ȘE">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_TE"><div class="sil-record-label">TE_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_TE">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_ȚE"><div class="sil-record-label">ȚE_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_ȚE">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_VE"><div class="sil-record-label">VE_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_VE">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_ZE"><div class="sil-record-label">ZE_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_ZE">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_BI"><div class="sil-record-label">BI_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_BI">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_CI"><div class="sil-record-label">CI_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_CI">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_DI"><div class="sil-record-label">DI_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_DI">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_FI"><div class="sil-record-label">FI_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_FI">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_GI"><div class="sil-record-label">GI_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_GI">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_HI"><div class="sil-record-label">HI_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_HI">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_JI"><div class="sil-record-label">JI_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_JI">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_LI"><div class="sil-record-label">LI_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_LI">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_MI"><div class="sil-record-label">MI_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_MI">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_NI"><div class="sil-record-label">NI_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_NI">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_PI"><div class="sil-record-label">PI_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_PI">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_RI"><div class="sil-record-label">RI_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_RI">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_SI"><div class="sil-record-label">SI_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_SI">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_ȘI"><div class="sil-record-label">ȘI_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_ȘI">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_TI"><div class="sil-record-label">TI_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_TI">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_ȚI"><div class="sil-record-label">ȚI_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_ȚI">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_VI"><div class="sil-record-label">VI_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_VI">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_ZI"><div class="sil-record-label">ZI_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_ZI">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_BO"><div class="sil-record-label">BO_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_BO">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_CO"><div class="sil-record-label">CO_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_CO">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_DO"><div class="sil-record-label">DO_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_DO">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_FO"><div class="sil-record-label">FO_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_FO">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_GO"><div class="sil-record-label">GO_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_GO">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_HO"><div class="sil-record-label">HO_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_HO">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_JO"><div class="sil-record-label">JO_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_JO">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_LO"><div class="sil-record-label">LO_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_LO">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_MO"><div class="sil-record-label">MO_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_MO">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_NO"><div class="sil-record-label">NO_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_NO">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_PO"><div class="sil-record-label">PO_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_PO">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_RO"><div class="sil-record-label">RO_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_RO">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_SO"><div class="sil-record-label">SO_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_SO">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_ȘO"><div class="sil-record-label">ȘO_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_ȘO">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_TO"><div class="sil-record-label">TO_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_TO">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_ȚO"><div class="sil-record-label">ȚO_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_ȚO">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_VO"><div class="sil-record-label">VO_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_VO">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_ZO"><div class="sil-record-label">ZO_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_ZO">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_BU"><div class="sil-record-label">BU_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_BU">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_CU"><div class="sil-record-label">CU_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_CU">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_DU"><div class="sil-record-label">DU_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_DU">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_FU"><div class="sil-record-label">FU_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_FU">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_HU"><div class="sil-record-label">HU_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_HU">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_JU"><div class="sil-record-label">JU_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_JU">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_LU"><div class="sil-record-label">LU_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_LU">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_MU"><div class="sil-record-label">MU_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_MU">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_NU"><div class="sil-record-label">NU_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_NU">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_PU"><div class="sil-record-label">PU_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_PU">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_RU"><div class="sil-record-label">RU_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_RU">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_SU"><div class="sil-record-label">SU_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_SU">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_ȘU"><div class="sil-record-label">ȘU_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_ȘU">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_TU"><div class="sil-record-label">TU_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_TU">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_BĂ"><div class="sil-record-label">BĂ_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_BĂ">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_CĂ"><div class="sil-record-label">CĂ_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_CĂ">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_FĂ"><div class="sil-record-label">FĂ_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_FĂ">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_HĂ"><div class="sil-record-label">HĂ_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_HĂ">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_MĂ"><div class="sil-record-label">MĂ_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_MĂ">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_PĂ"><div class="sil-record-label">PĂ_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_PĂ">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_RĂ"><div class="sil-record-label">RĂ_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_RĂ">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_SĂ"><div class="sil-record-label">SĂ_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_SĂ">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_VĂ"><div class="sil-record-label">VĂ_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_VĂ">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_CÂ"><div class="sil-record-label">CÂ_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_CÂ">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_FÂ"><div class="sil-record-label">FÂ_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_FÂ">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_GÂ"><div class="sil-record-label">GÂ_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_GÂ">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_HÂ"><div class="sil-record-label">HÂ_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_HÂ">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div><div class="sil-record-row" id="silrow_RÂ"><div class="sil-record-label">RÂ_</div><div style="display: flex; gap: 8px; align-items: center;"><button class="btn sil-rec-btn" id="silRecBtn_RÂ">🔴</button><button class="btn sil-play-btn">▶</button><span class="sil-done-mark">✓</span></div></div></div>
+    <div id="silRecordList" style="width:100%;display:flex;flex-direction:column;gap:8px;"></div>
+</div>
+
+<!-- ════════════════════ FLUENȚĂ — ALEGERE CATEGORIE ════════════════════ -->
+<div id="fluentaCatScreen" class="screen hidden">
+    <div class="ex-header">
+        <button class="back-btn" onclick="goHome()">← Înapoi</button>
+        <div style="font-size:0.95rem;font-weight:700;color:var(--primary);">⏱️ Fluență verbală</div>
+    </div>
+    <div style="font-size:1rem;font-weight:700;color:var(--text);text-align:center;margin-bottom:4px;">Alege o categorie</div>
+    <button class="mode-btn" style="background:var(--success);color:#fff;border:none;" onclick="startFluenta(null)">
+        <span class="mode-icon">🎲</span>
+        <div class="mode-info">
+            <div style="font-weight:800;">Categorie aleatorie</div>
+        </div>
+        <span class="mode-arrow" style="color:#fff;">▶</span>
+    </button>
+    <div id="fluentaCatList" style="width:100%;display:flex;flex-direction:column;gap:8px;"></div>
+</div>
+
+<!-- ════════════════════ FLUENȚĂ VERBALĂ ════════════════════ -->
+<div id="fluentaScreen" class="screen hidden">
+    <div class="ex-header">
+        <button class="back-btn" onclick="fluentaStop(); showFluentaCatScreen()">← Înapoi</button>
+        <div class="prog-lbl" id="fluentaTimerLbl">60s</div>
+    </div>
+
+    <!-- Faza: gata? -->
+    <div id="fluentaPhaseReady" class="card" style="gap:20px;text-align:center;">
+        <div style="font-size:4rem;" id="fluentaCatIcon">🛏️</div>
+        <div style="font-size:1.6rem;font-weight:800;" id="fluentaCatLabel">Cameră</div>
+        <div style="font-size:1rem;color:var(--muted);line-height:1.5;">Spune cât mai multe cuvinte legate de această categorie în <strong>60 de secunde</strong>.<br>Apasă <strong>+1</strong> de fiecare dată când reușești să spui un cuvânt.</div>
+        <button class="btn btn-success" style="font-size:1.3rem;padding:22px;" onclick="fluentaStart()">▶&nbsp; Începe!</button>
+    </div>
+
+    <!-- Faza: activ -->
+    <div id="fluentaPhaseActive" class="hidden" style="width:100%;display:flex;flex-direction:column;align-items:center;gap:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+            <div style="font-size:1.3rem;" id="fluentaActiveCat">🛏️ Cameră</div>
+            <div id="fluentaTimerDisplay" style="font-size:2.4rem;font-weight:900;color:var(--primary);min-width:60px;text-align:right;">60</div>
+        </div>
+        <div style="width:100%;height:8px;background:#EEF2F7;border-radius:4px;">
+            <div id="fluentaTimerBar" style="height:100%;background:var(--primary);border-radius:4px;width:100%;transition:width 1s linear;"></div>
+        </div>
+        <div id="fluentaCount" style="font-size:6rem;font-weight:900;color:var(--success);line-height:1;margin:8px 0;">0</div>
+        <div style="font-size:1rem;color:var(--muted);margin-bottom:4px;">cuvinte</div>
+        <button id="fluentaAddBtn" class="btn btn-success" style="font-size:2.2rem;padding:32px;width:100%;" onclick="fluentaAdd(event)">+1</button>
+        <button class="btn btn-outline" style="font-size:0.95rem;padding:12px;" onclick="fluentaUndo()">↩&nbsp; Anulează ultimul</button>
+    </div>
+
+    <!-- Faza: rezultat -->
+    <div id="fluentaPhaseDone" class="hidden card" style="gap:14px;text-align:center;">
+        <div style="font-size:1.8rem;font-weight:700;">⏱️ Timp expirat!</div>
+        <div style="font-size:1.1rem;" id="fluentaDoneCat">🛏️ Cameră</div>
+        <div style="font-size:4.5rem;font-weight:900;color:var(--success);line-height:1;" id="fluentaDoneScore">0</div>
+        <div style="font-size:1rem;color:var(--muted);">cuvinte în 60 de secunde</div>
+        <div id="fluentaChart" style="width:100%;margin:4px 0;"></div>
+        <button class="btn btn-success" style="font-size:1.1rem;padding:18px;" onclick="fluentaAgain()">🔄&nbsp; Din nou — aceeași categorie</button>
+        <button class="btn btn-outline" style="font-size:1rem;padding:14px;" onclick="showFluentaCatScreen()">🎲&nbsp; Altă categorie</button>
+        <button class="btn btn-outline" style="font-size:1rem;padding:14px;" onclick="goHome()">🏠&nbsp; Acasă</button>
+    </div>
 </div>
 
 <!-- ════════════════════ RECORD LETTERS ════════════════════ -->
@@ -1000,6 +1028,9 @@
 </div>
 
 <script>
+// Salvăm HTML-ul original înainte de orice modificare a DOM-ului (pentru download)
+const _INITIAL_HTML = document.documentElement.outerHTML;
+
 // ═══════════════════════════════════════════
 // VOCABULAR (max 5 litere per cuvânt)
 // ═══════════════════════════════════════════
@@ -1443,6 +1474,7 @@ function selectMode(m) {
 
 function handleModeBtn(m) {
     mode = m;
+    location.hash = m;
     const needsCat = ["arrange", "evocare", "descriere", "fraze"].includes(m);
     if (needsCat) {
         showCatPickScreen(m);
@@ -1515,6 +1547,9 @@ function startExercise() {
     } else if (mode === "silabe") {
         startSilabe();
         return;
+    } else if (mode === "fluenta") {
+        showFluentaCatScreen();
+        return;
     } else if (mode === "numere") {
         numQueue = generateNumereQueue(5);
         numIdx = 0; numScore = 0;
@@ -1533,6 +1568,8 @@ function restartSame() { startExercise(); }
 function goHome() {
     window.speechSynthesis.cancel();
     clearTimeout(autoAdvTimer);
+    fluentaStop();
+    history.replaceState(null, "", location.pathname + location.search);
     if (sessionActive) { renderSessionScreen(); show("sessionScreen"); }
     else show("homeScreen");
 }
@@ -2307,13 +2344,13 @@ function loadFraze() {
     successBtn.disabled = false;
     successBtn.style.background = "";
     successBtn.style.color = "";
-    successBtn.textContent = frazeNivel === 1 ? "✅\u00a0 Am repetat"
+    successBtn.textContent = frazeNivel === 1 ? "✅\u00a0 Am citit"
                            : frazeNivel === 2 ? "✅\u00a0 Am completat fraza"
                            :                    "✅\u00a0 Am spus fraza";
-    // Nivel 1: ascunde "Am repetat" și "Repetă!" până când utilizatorul apasă 🔊
+    // Nivel 1: "Am repetat" vizibil din start
     if (frazeNivel === 1) {
-        successBtn.classList.add("hidden");
-        document.getElementById("frazeRepetaLabel").classList.add("hidden");
+        successBtn.classList.remove("hidden");
+        document.getElementById("frazeRepetaLabel").classList.remove("hidden");
     }
 
     document.getElementById("frazeSoundBtn").textContent =
@@ -2591,7 +2628,7 @@ function showCompletionEvocare(practiced, total) {
 // UTILS
 // ═══════════════════════════════════════════
 function show(id) {
-    ["homeScreen","catPickScreen","arrangeScreen","letterScreen","evocareScreen","descriereScreen","numereScreen","completionScreen","recordScreen","frazeScreen","sessionScreen","silabeScreen","silabeRecordScreen"].forEach(s =>
+    ["homeScreen","catPickScreen","arrangeScreen","letterScreen","evocareScreen","descriereScreen","numereScreen","completionScreen","recordScreen","frazeScreen","sessionScreen","silabeScreen","silabeRecordScreen","fluentaScreen","fluentaCatScreen"].forEach(s =>
         document.getElementById(s).classList.toggle("hidden", s !== id)
     );
 }
@@ -3220,8 +3257,8 @@ function downloadSilabeHtml() {
     const count = Object.keys(baked).length;
     if (count === 0) { alert("Nu există înregistrări salvate."); return; }
 
-    // Citește HTML-ul curent și înlocuiește placeholder-ul
-    const html = document.documentElement.outerHTML;
+    // Folosim HTML-ul original (capturat la start, înainte de modificări DOM)
+    const html = _INITIAL_HTML;
     const replacement = `// SILABE_AUDIO_EMBEDDED — nu șterge acest comentariu\nconst SILABE_AUDIO_BAKED = ${JSON.stringify(baked)};`;
     const updated = html.replace(
         /\/\/ SILABE_AUDIO_EMBEDDED.*?\nconst SILABE_AUDIO_BAKED = \{.*?\};/s,
@@ -3239,13 +3276,179 @@ function downloadSilabeHtml() {
     alert(`✓ Descărcat! ${count} silabe incluse în fișier.`);
 }
 
+// ═══════════════════════════════════════════
+// FLUENȚĂ VERBALĂ
+// ═══════════════════════════════════════════
+
+// Curăță categoriile vechi din localStorage
+["camera","bucatarie","gradina","familie","corp","natura","transport"].forEach(id =>
+    localStorage.removeItem("fluenta_" + id)
+);
+
+const FLUENTA_CATS = [
+    { id:"animale",   label:"Animale",              icon:"🐾" },
+    { id:"fructe",    label:"Fructe și legume",     icon:"🍎" },
+    { id:"mancare",   label:"Mâncare",              icon:"🍽️" },
+    { id:"casa",      label:"Obiecte din casă",     icon:"🏠" },
+    { id:"culori",    label:"Culori",               icon:"🎨" },
+    { id:"haine",     label:"Haine",                icon:"👕" },
+    { id:"transport", label:"Mijloace de transport",      icon:"🚗" },
+    { id:"meserii",   label:"Meserii",                    icon:"👷" },
+    { id:"camera",    label:"Obiecte din cameră",         icon:"🛋️" },
+    { id:"familie",   label:"Membri ai familiei",         icon:"👨‍👩‍👧" },
+    { id:"timp",      label:"Zile / luni / anotimpuri",   icon:"📅" },
+];
+
+let fluentaCat      = null;
+let fluentaScore    = 0;
+let fluentaSeconds  = 60;
+let fluentaInterval = null;
+
+function showFluentaCatScreen() {
+    renderFluentaCats();
+    show("fluentaCatScreen");
+}
+
+function renderFluentaCats() {
+    const list = document.getElementById("fluentaCatList");
+    list.innerHTML = "";
+    FLUENTA_CATS.forEach(cat => {
+        const btn = document.createElement("button");
+        btn.className = "mode-btn";
+        btn.innerHTML = `<span class="mode-icon">${cat.icon}</span>
+            <div class="mode-info"><div>${cat.label}</div></div>
+            <span class="mode-arrow">▶</span>`;
+        btn.addEventListener("click", () => startFluenta(cat));
+        list.appendChild(btn);
+    });
+}
+
+function startFluenta(cat) {
+    fluentaCat   = cat || FLUENTA_CATS[Math.floor(Math.random() * FLUENTA_CATS.length)];
+    fluentaScore   = 0;
+    fluentaSeconds = 60;
+    document.getElementById("fluentaCatIcon").textContent  = fluentaCat.icon;
+    document.getElementById("fluentaCatLabel").textContent = fluentaCat.label;
+    document.getElementById("fluentaTimerLbl").textContent = "60s";
+    document.getElementById("fluentaPhaseReady").classList.remove("hidden");
+    document.getElementById("fluentaPhaseActive").classList.add("hidden");
+    document.getElementById("fluentaPhaseDone").classList.add("hidden");
+    show("fluentaScreen");
+}
+
+function fluentaStart() {
+    document.getElementById("fluentaCount").textContent           = "0";
+    document.getElementById("fluentaTimerDisplay").textContent    = "60";
+    document.getElementById("fluentaTimerDisplay").style.color    = "var(--primary)";
+    document.getElementById("fluentaTimerBar").style.background   = "var(--primary)";
+    document.getElementById("fluentaTimerBar").style.width        = "100%";
+    document.getElementById("fluentaActiveCat").textContent       = fluentaCat.icon + " " + fluentaCat.label;
+    document.getElementById("fluentaPhaseReady").classList.add("hidden");
+    document.getElementById("fluentaPhaseActive").classList.remove("hidden");
+
+    fluentaInterval = setInterval(() => {
+        fluentaSeconds--;
+        const pct = (fluentaSeconds / 60 * 100) + "%";
+        document.getElementById("fluentaTimerDisplay").textContent = fluentaSeconds;
+        document.getElementById("fluentaTimerLbl").textContent     = fluentaSeconds + "s";
+        document.getElementById("fluentaTimerBar").style.width     = pct;
+        if (fluentaSeconds <= 10) {
+            document.getElementById("fluentaTimerDisplay").style.color  = "#E03E3E";
+            document.getElementById("fluentaTimerBar").style.background = "#E03E3E";
+        }
+        if (fluentaSeconds <= 0) fluentaEnd();
+    }, 1000);
+}
+
+function fluentaAdd(e) {
+    fluentaScore++;
+    document.getElementById("fluentaCount").textContent = fluentaScore;
+    const btn = document.getElementById("fluentaAddBtn");
+    btn.style.transform = "scale(0.93)";
+    setTimeout(() => { btn.style.transform = ""; }, 120);
+}
+
+function fluentaUndo() {
+    if (fluentaScore > 0) {
+        fluentaScore--;
+        document.getElementById("fluentaCount").textContent = fluentaScore;
+    }
+}
+
+function fluentaStop() {
+    if (fluentaInterval) { clearInterval(fluentaInterval); fluentaInterval = null; }
+}
+
+function fluentaEnd() {
+    fluentaStop();
+    const key     = "fluenta_" + fluentaCat.id;
+    const history = JSON.parse(localStorage.getItem(key) || "[]");
+    const today   = new Date().toLocaleDateString("ro-RO", { day:"2-digit", month:"2-digit" });
+    history.push({ date: today, score: fluentaScore });
+    if (history.length > 8) history.splice(0, history.length - 8);
+    localStorage.setItem(key, JSON.stringify(history));
+
+    document.getElementById("fluentaPhaseActive").classList.add("hidden");
+    document.getElementById("fluentaPhaseDone").classList.remove("hidden");
+    document.getElementById("fluentaDoneCat").textContent   = fluentaCat.icon + " " + fluentaCat.label;
+    document.getElementById("fluentaDoneScore").textContent = fluentaScore;
+    document.getElementById("fluentaTimerLbl").textContent  = "Gata!";
+    fluentaRenderChart(history);
+}
+
+function fluentaRenderChart(history) {
+    const el = document.getElementById("fluentaChart");
+    if (history.length < 2) { el.innerHTML = ""; return; }
+    const maxScore = Math.max(...history.map(h => h.score), 1);
+    const first = history[0].score;
+    const last  = history[history.length - 1].score;
+    const trend = last > first ? "↑ progres!" : last === first ? "→ la fel" : "↓";
+    const trendColor = last > first ? "var(--success)" : last === first ? "var(--muted)" : "#E03E3E";
+
+    let html = `<div style="font-size:0.85rem;font-weight:700;color:var(--muted);margin-bottom:10px;">
+        Progres — ${fluentaCat.label} &nbsp;<span style="color:${trendColor};font-weight:800;">${trend}</span>
+    </div>`;
+    html += `<div style="display:flex;align-items:flex-end;gap:5px;height:90px;width:100%;">`;
+    history.forEach((h, i) => {
+        const isLast  = i === history.length - 1;
+        const pct     = Math.max(Math.round(h.score / maxScore * 100), 5);
+        const bg      = isLast ? "var(--success)" : "#B8D4F0";
+        const weight  = isLast ? "800" : "500";
+        const color   = isLast ? "var(--success)" : "var(--muted)";
+        html += `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div style="font-size:0.75rem;font-weight:${weight};color:${color};">${h.score}</div>
+            <div style="width:100%;background:${bg};border-radius:4px 4px 0 0;height:${pct}%;min-height:4px;"></div>
+            <div style="font-size:0.6rem;color:var(--muted);white-space:nowrap;">${h.date}</div>
+        </div>`;
+    });
+    html += `</div>`;
+    el.innerHTML = html;
+}
+
+function fluentaAgain() {
+    fluentaScore   = 0;
+    fluentaSeconds = 60;
+    document.getElementById("fluentaPhaseDone").classList.add("hidden");
+    document.getElementById("fluentaPhaseReady").classList.remove("hidden");
+    document.getElementById("fluentaTimerLbl").textContent = "60s";
+}
+
 // INIT
 renderCats();
 renderEvocCats();
 renderFrazeCats();
 selectMode("arrange");
 
+// URL hash routing
+const VALID_MODES = ["arrange","recognize","sound","evocare","numere","descriere","fraze","silabe","fluenta"];
+function navigateToHash() {
+    const h = location.hash.replace("#", "");
+    if (VALID_MODES.includes(h)) handleModeBtn(h);
+    else show("homeScreen");
+}
+window.addEventListener("hashchange", navigateToHash);
+navigateToHash();
+
 </script>
-
-
-</body></html>
+</body>
+</html>
